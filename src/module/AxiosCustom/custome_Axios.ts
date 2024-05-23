@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:7070";
+const BASE_URL = "http://localhost:5050";
 
 const instance = axios.create({
   baseURL: `${BASE_URL}`,
@@ -11,12 +11,15 @@ const instance = axios.create({
 
 instance.interceptors.request.use(
   function (config) {
-    // Do something before request is sent
     let token: any = localStorage.getItem("token");
-    token = JSON.parse(token);
-    token = token.token;
-    config.headers.Authorization = token ? `Bearer ${token}` : "";
-    return config;
+    if (token) {
+      token = JSON.parse(token);
+      token = token.token;
+      config.headers.Authorization = token ? `Bearer ${token}` : "";
+      return config;
+    } else {
+      return config;
+    }
   },
   function (error) {
     // Do something with request error
