@@ -54,7 +54,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       let token: any = window.localStorage.getItem("token");
       token = JSON.parse(token);
       token = token?.token;
-      if (token && state.isAuthenticated === false) {
+      if (token) {
         const dataUser = await axios
           .get("whoAmI")
           .then((res) => res)
@@ -69,7 +69,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     fetchData();
-  }, [state.isAuthenticated]);
+  }, []);
 
   const value = {
     ...state,
