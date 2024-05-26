@@ -17,6 +17,9 @@ import InfoIcon from "@mui/icons-material/Info";
 import CallIcon from "@mui/icons-material/Call";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useAuthContext } from "@/provider/auth.provider";
+import SearchIcon from "@mui/icons-material/Search";
+import axios from "../../module/AxiosCustom/custome_Axios";
+import { useRouter } from "next/navigation";
 
 const solutions = [
   {
@@ -55,107 +58,123 @@ const solutions = [
 export default function Header() {
   const authenContext = useAuthContext();
   const { user, isAuthenticated } = authenContext;
+  const [listKey, setListKey] = useState<any[]>([]);
+  const router = useRouter();
+  useEffect(() => {
+    async function fetchData() {
+      let dataKeys: any = await axios
+        .get(`searches`, {
+          params: {
+            filter: {
+              order: "updatedAt DESC",
+              limit: 5,
+            },
+          },
+        })
+        .then((res) => res)
+        .catch((err) => console.log(err));
+
+      setListKey(dataKeys);
+    }
+
+    fetchData();
+  }, []);
 
   return (
-    <Popover className="relative bg-white z-10 ">
-      <div className="mx-auto px-4 sm:px-6 fixed top-0 right-0 left-0 bg-white z-10">
-        <div className="flex justify-between items-center border-b-2 border-gray-100 py-6 md:justify-start md:space-x-10">
-          <div className="flex justify-start lg:w-0 lg:flex-1">
+    <Popover className="relative bg-white z-20 ">
+      <div className="bg-green-500  fixed top-0 right-0 left-0 ">
+        <div className="mx-auto z-10 w-full  md:w-2/3">
+          <div className="flex justify-between items-center py-6 md:py-2 md:justify-start">
             <div className="flex justify-start lg:w-0 lg:flex-1">
-              <div className="cursor-pointer flex items-center">
-                <img
-                  className="h-8 ml-3 w-auto sm:h-10"
-                  src="https://static.wixstatic.com/media/2cd43b_17040a042929442094fd1a2179d5bd29~mv2.png/v1/fill/w_320,h_320,q_90/2cd43b_17040a042929442094fd1a2179d5bd29~mv2.png"
-                  alt=""
-                />
-                <span className="font-bold text-2xl px-2 text-blue-600">
-                  Luna Shop
-                </span>
+              <div className="flex justify-start lg:w-0 lg:flex-1">
+                <div className="cursor-pointer flex items-center">
+                  <img
+                    className="h-8 w-auto sm:h-10"
+                    src="https://static.wixstatic.com/media/2cd43b_17040a042929442094fd1a2179d5bd29~mv2.png/v1/fill/w_320,h_320,q_90/2cd43b_17040a042929442094fd1a2179d5bd29~mv2.png"
+                    alt=""
+                  />
+                  <span className="font-bold text-2xl px-2 text-white">
+                    Luna Shop
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
-          <div className="-mr-2 -my-2 md:hidden">
-            <PopoverButton className="bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
-              <span className="sr-only">Open menu</span>
-              <MenuOutlinedIcon />
-            </PopoverButton>
-          </div>
-          <PopoverGroup as="nav" className="hidden md:flex space-x-10">
-            <div
-              className="cursor-pointer text-lg font-medium text-gray-500 hover:text-gray-900"
-              onClick={() => {}}
-            >
-              Home
+            <div className="-mr-2 -my-2 md:hidden">
+              <PopoverButton className="bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
+                <span className="sr-only">Open menu</span>
+                <MenuOutlinedIcon />
+              </PopoverButton>
             </div>
-            <div
-              className="cursor-pointer text-lg font-medium text-gray-500 hover:text-gray-900"
-              onClick={() => {}}
+            <PopoverGroup
+              as="nav"
+              className="hidden md:flex md:flex-col space-x-10  w-1/2 md:space-x-0 md:items-center"
             >
-              Menu
-            </div>
-            <div
-              className="cursor-pointer text-lg font-medium text-gray-500 hover:text-gray-900"
-              onClick={() => {}}
-            >
-              About
-            </div>
-            <div
-              className="cursor-pointer text-lg font-medium text-gray-500 hover:text-gray-900"
-              onClick={() => {}}
-            >
-              Contact
-            </div>
-          </PopoverGroup>
-          <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
-            <p
-              className="font-semibold mr-8 text-lg bg-gray-100 rounded-2xl hover:bg-blue-200  cursor-pointer"
-              onClick={() => {}}
-            >
-              {user?.fullName ? `Hello ${user?.fullName}` : ""}
-            </p>
-
-            <div
-              className="cursor-pointer whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-3xl shadow-sm text-base font-medium text-white bg-green-600 hover:bg-green-700"
-              onClick={() => {}}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
-              </svg>
-              <div className="rounded-xl bg-red-600 px-2 absolute text-xs mt-3 ml-4">
-                0{" "}
+              <div className="flex flex-row items-center -space-x-8 w-full mt-4 mb-2">
+                <input
+                  type="text"
+                  placeholder="Search"
+                  className="w-full px-4 py-2 focus:outline-offset-4"
+                ></input>
+                <SearchIcon className="" />
               </div>
-            </div>
-
-            <div
-              className="cursor-pointer ml-8 whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-3xl shadow-sm text-base font-medium text-white bg-green-600 hover:bg-green-700"
-              onClick={() => {
-                if (isAuthenticated) {
-                  console.log("logout");
-                } else {
-                  console.log("login");
-                }
-              }}
-            >
-              {isAuthenticated ? "Logout" : "Login"}
-              {/* <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
+              <div className="text-white flex flex-row justify-start gap-x-3 w-full text-sm ">
+                {listKey.map((key: any) => (
+                  <div
+                    onClick={() => {
+                      router.push(`/search?keyword=${key.keyWord}`);
+                    }}
+                    className="hover:underline hover:cursor-grab"
+                    key={key.id}
+                  >
+                    {key.keyWord}
+                  </div>
+                ))}
+              </div>
+            </PopoverGroup>
+            <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
+              <p
+                className="font-semibold mr-8 text-lg bg-gray-100 rounded-2xl hover:bg-blue-200  cursor-pointer"
+                onClick={() => {}}
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
-                />
-              </svg> */}
+                {/* {user?.fullName ? `Hello ${user?.fullName}` : ""} */}
+              </p>
+
+              <div
+                className="cursor-pointer whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-3xl shadow-sm text-base font-medium text-white "
+                onClick={() => {}}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  className="size-9"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"
+                  />
+                </svg>
+
+                <div className="rounded-xl bg-red-600 px-2 absolute text-xs top-8 ml-7">
+                  0{" "}
+                </div>
+              </div>
+
+              <div
+                className="cursor-pointer ml-8 whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-3xl shadow-sm text-base font-medium text-white bg-green-600 hover:bg-green-700"
+                onClick={() => {
+                  if (isAuthenticated) {
+                    console.log("logout");
+                  } else {
+                    console.log("login");
+                  }
+                }}
+              >
+                {isAuthenticated ? "Logout" : "Login"}
+              </div>
             </div>
           </div>
         </div>
