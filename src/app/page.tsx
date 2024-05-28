@@ -9,6 +9,7 @@ import ItemCard from "@/module/base/itemCard";
 import Footer from "@/module/Footer";
 import { getDistance } from "@/utils/getDistance";
 import LocationCard from "@/module/base/locationCard";
+import { set } from "react-hook-form";
 
 export default function Home() {
   const route = useRouter();
@@ -59,7 +60,7 @@ export default function Home() {
             where: {
               pickUpGeometry: {
                 near: dataLocation[0]?.geometry,
-                maxDistance: 2,
+                maxDistance: 10,
                 unit: "kilometers",
               },
             },
@@ -69,7 +70,9 @@ export default function Home() {
 
       const listIdKiot = dataKiotNear.map((kiot: any) => kiot.id);
 
-      // const listDistance = await Promise.all(
+      let listDistance: any = [];
+
+      // listDistance = await Promise.all(
       //   dataKiotNear.map(async (kiot: any) => {
       //     const to = `${dataLocation[0].geometry.lat},${dataLocation[0].geometry.lng}`;
       //     const from = `${kiot.pickUpGeometry.lat},${kiot.pickUpGeometry.lng}`;
@@ -86,7 +89,6 @@ export default function Home() {
       //     };
       //   })
       // );
-      let listDistance: any = [];
       let dataProductKiot: any = [];
 
       if (dataKiotNear.length > 0) {
@@ -192,7 +194,12 @@ export default function Home() {
             </div>
 
             <div className="flex flex-row gap-x-10 mt-4">
-              <LocationCard location={location} />
+              <LocationCard
+                location={location}
+                setLocation={(newLocation: any) => {
+                  setLocation(newLocation);
+                }}
+              />
               <div className="border-[1px] px-2 py-1 rounded-sm border-green-600 hover:cursor-grab">
                 10km
               </div>

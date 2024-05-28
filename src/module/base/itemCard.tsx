@@ -7,7 +7,7 @@ export default function ItemCard({ product }: { product: any }) {
     <div
       onClick={() => route.push(`/product/${product.id}`)}
       key={product.id}
-      className="hover:z-10 transform hover:-translate-y-1 transition duration-200 flex bg-white flex-col items-center justify-center hover:cursor-grab p-2 hover:border-green-400 hover:border-[1px] hover:shadow-lg"
+      className="hover:z-10 h-fit transform hover:-translate-y-1 transition duration-200 flex bg-white flex-col items-center justify-center hover:cursor-grab p-2 hover:border-green-400 hover:border-[1px] hover:shadow-lg"
     >
       <img
         src={product.image[0].url}

@@ -88,6 +88,13 @@ export type SelectFieldProps = {
   required?: boolean;
   options?: any[];
   multiple?: boolean;
+  setSelected?: Function;
+};
+
+export type CheckedFieldProps = {
+  name: string;
+  label: string;
+  required?: boolean;
 };
 
 export const Field = ({
@@ -136,8 +143,8 @@ export const Field = ({
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-green-500"
                 type={type}
                 disabled={disabled}
-                onChange={field.onChange}
                 placeholder={placeholder}
+                { ...field}
               />
             </FormControl>
             <span className="text-xs text-red-500">
@@ -188,6 +195,7 @@ export const isEmpty = (obj: any) =>
   !Object.entries(obj || {}).length;
 
 export const SelectField: FC<SelectFieldProps> = ({
+  setSelected,
   label,
   helpText = "",
   placeholder = "Select...",
@@ -346,9 +354,12 @@ export const SelectField: FC<SelectFieldProps> = ({
                                 e.preventDefault();
                                 e.stopPropagation();
                               }}
-                              onSelect={() =>
-                                onSelectOption(option, field.value)
-                              }
+                              onSelect={() => {
+                                onSelectOption(option, field.value);
+                                if (setSelected) {
+                                  setSelected(option.value);
+                                }
+                              }}
                               className={"cursor-pointer"}
                             >
                               {getLabel(option)}
@@ -367,6 +378,31 @@ export const SelectField: FC<SelectFieldProps> = ({
         );
       }}
       {...props}
+    />
+  );
+};
+
+import { Checkbox } from "@/components/ui/checkbox";
+
+export const CheckedField: FC<CheckedFieldProps> = ({ name, label }) => {
+  const methods = useFormContext();
+
+  const { control, setValue, getValues } = methods;
+
+  return (
+    <FormField
+      control={control}
+      name={name}
+      render={({ field }) => (
+        <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+          <FormControl>
+            <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+          </FormControl>
+          <div className="space-y-1 leading-none">
+            <FormLabel>{label} </FormLabel>
+          </div>
+        </FormItem>
+      )}
     />
   );
 };
