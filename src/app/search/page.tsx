@@ -16,6 +16,9 @@ import { Input } from "@/components/ui/input";
 import { list } from "postcss";
 import { set } from "react-hook-form";
 import ItemCard from "@/module/base/itemCard";
+import ShopCard from "@/module/base/shopCard";
+import SearchIcon from "@mui/icons-material/Search";
+import KiotCard from "@/module/base/KiotCard";
 
 export default function Home() {
   const params = useParams();
@@ -144,7 +147,6 @@ export default function Home() {
           listKiot = data.kiot;
           listProduct = data.products;
 
-
           if (locationOnlineObject.length > 0) {
             listShop = listShop.filter((shop: any) => {
               return locationOnlineObject.includes(shop.pickUpProvinceId);
@@ -167,7 +169,6 @@ export default function Home() {
               })
               .then((res) => res)
               .catch((e) => console.log(e));
-
 
             const listShopId = listStoresArea?.map((shop: any) => shop.id);
             listProduct = listProduct?.filter((product: any) => {
@@ -375,7 +376,6 @@ export default function Home() {
               .then((res) => res)
               .catch((e) => console.log(e));
 
-
             const listKiotId = listKiotsArea?.map((kiot: any) => kiot.id);
             listProduct = listProduct?.filter((product: any) => {
               return listKiotId.includes(product.idOfKiot);
@@ -579,9 +579,6 @@ export default function Home() {
         }
       }
 
-      console.log("listShop", listShop);
-      console.log("listKiot", listKiot);
-      console.log("listProduct", listProduct);
       setListShop(listShop);
       setListKiot(listKiot);
       setListProduct(listProduct);
@@ -871,12 +868,48 @@ export default function Home() {
               </div>
             </div>
             <div className="pl-4 col-span-5">
+              {listShop?.length > 0 &&
+                scope == "online" &&
+                keyWord &&
+                keyWord !== "" && (
+                  <>
+                    <p className="flex  items-center">
+                      Shop liên quan đến
+                      <p className="ml-2 text-lg text-green-700 w-fit">
+                        `{keyWord}`
+                      </p>
+                    </p>
+                    <ShopCard shop={listShop[1]} />
+                  </>
+                )}
+
+              {listKiot?.length > 0 && keyWord && keyWord !== "" && (
+                <>
+                  <p className="flex  items-center">
+                    Kiot liên quan đến
+                    <p className="ml-2 text-lg text-green-700 w-fit">
+                      `{keyWord}`
+                    </p>
+                  </p>
+                  <KiotCard kiot={listKiot[0]} />
+                </>
+              )}
+
               <div>Kêt quả tìm kiếm cho từ khóa {keyWord}</div>
-              <div className="grid md:grid-cols-5 grid-cols-3 mt-4">
-                {listProduct?.map((product: any) => {
-                  return <ItemCard product={product} key={product.id} />;
-                })}
-              </div>
+
+              {listProduct?.length > 0 && (
+                <div className="grid md:grid-cols-5 grid-cols-3 mt-4">
+                  {listProduct?.map((product: any) => {
+                    return <ItemCard product={product} key={product.id} />;
+                  })}
+                </div>
+              )}
+
+              {listProduct?.length == 0 && (
+                <div className="flex justify-center items-center bg-white h-[300px] mt-4 mb-4">
+                  <SearchIcon /> Không có sản phẩm nào phu hop
+                </div>
+              )}
             </div>
           </div>
         </div>

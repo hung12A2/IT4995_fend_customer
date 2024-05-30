@@ -19,9 +19,10 @@ import { FormProvider, set, useForm } from "react-hook-form";
 import { CheckedField, SelectField, TextField } from "./fieldBase";
 import axios from "../AxiosCustom/custome_Axios";
 import { useToast } from "@/components/ui/use-toast";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 export default function LocationCard({
-  location,
+  location = [],
   setLocation,
 }: {
   location: any;
@@ -43,9 +44,17 @@ export default function LocationCard({
   let formUpdateContext = useForm({});
   const { handleSubmit: handleSubmitUpdate, setValue: setValueUpdate } =
     formUpdateContext;
+  location = location || [];
   const locationKiotDefault = location?.filter(
     (item: any) => item?.isDefaultKiot == true
   )[0];
+
+  const [selectedLocation, setSelectedLocation] =
+    useState<any>(locationKiotDefault);
+
+  const [selectedLocationId, setSelectedLocationId] = useState<any>(
+    locationKiotDefault?.id
+  );
 
   useEffect(() => {
     async function fetchProvince() {
@@ -62,10 +71,12 @@ export default function LocationCard({
       });
 
       setListProvince(res);
+      setSelectedLocation(locationKiotDefault);
+      setSelectedLocationId(locationKiotDefault?.id);
     }
 
     fetchProvince();
-  }, []);
+  }, [locationKiotDefault]);
 
   useEffect(() => {
     async function fetchDistrict() {
@@ -329,8 +340,8 @@ export default function LocationCard({
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger>
           <div className="border-[1px] px-2 py-1 rounded-sm border-green-600 hover:cursor-grab">
-            {locationKiotDefault?.address}, {locationKiotDefault?.wardName},{" "}
-            {locationKiotDefault?.districtName}
+            {selectedLocation?.wardName},{selectedLocation?.districtName}
+            <ExpandMoreIcon className="ml-2" />
           </div>
         </DialogTrigger>
         <DialogContent>
@@ -341,7 +352,12 @@ export default function LocationCard({
           <DialogDescription>
             <ScrollArea className="h-100 rounded-md ">
               <div className="mt-4">
-                <RadioGroup>
+                <RadioGroup
+                  defaultValue={selectedLocationId}
+                  onValueChange={(data) => {
+                    setSelectedLocationId(data);
+                  }}
+                >
                   {location?.map((item: any, index: number) => (
                     <div
                       className={`grid grid-cols-10 py-4 border-gray-300  ${
@@ -367,7 +383,18 @@ export default function LocationCard({
                           {item?.address}, {item?.wardName},{" "}
                           {item?.districtName}, {item?.provinceName}
                         </div>
+                        {item?.isDefaultKiot && (
+                          <div className="text-sm font-light mt-2 border-2 border-green-600 w-fit text-green-600 px-2 py-1 ">
+                            Dia chi mac dinh giao hoa toc
+                          </div>
+                        )}
+                        {item?.isDefaultOnline && (
+                          <div className="text-sm font-light mt-2 border-2 border-green-600 w-fit text-green-600 px-2 py-1 ">
+                            Dia chi mac dinh giao online
+                          </div>
+                        )}
                       </div>
+
                       <div
                         className="col-span-2 hover:cursor-grab"
                         onClick={() => {
@@ -406,6 +433,12 @@ export default function LocationCard({
             </Button>
             <Button
               onClick={() => {
+                let locationSelected = location?.filter((item: any) => {
+                  return item.id == selectedLocationId;
+                })[0];
+
+                setSelectedLocation(locationSelected);
+
                 setOpen(false);
               }}
             >
