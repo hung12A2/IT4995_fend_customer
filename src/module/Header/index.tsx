@@ -8,6 +8,11 @@ import {
   PopoverPanel,
   PopoverButton,
 } from "@headlessui/react";
+import {
+  Popover as PopoverShad,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import CloseIcon from "@mui/icons-material/Close";
@@ -20,6 +25,7 @@ import { useAuthContext } from "@/provider/auth.provider";
 import SearchIcon from "@mui/icons-material/Search";
 import axios from "../../module/AxiosCustom/custome_Axios";
 import { useRouter } from "next/navigation";
+import { useCartContext } from "@/provider/cart.provider";
 
 const solutions = [
   {
@@ -58,6 +64,7 @@ const solutions = [
 export default function Header() {
   const authenContext = useAuthContext();
   const { user, isAuthenticated } = authenContext;
+  const { totalKiot, totalOnline } = useCartContext();
   const [listKey, setListKey] = useState<any[]>([]);
   const router = useRouter();
   useEffect(() => {
@@ -118,17 +125,18 @@ export default function Header() {
                 <SearchIcon className="" />
               </div>
               <div className="text-white flex flex-row justify-start gap-x-3 w-full text-sm ">
-                {listKey.map((key: any) => (
-                  <div
-                    onClick={() => {
-                      router.push(`/search?keyword=${key.keyWord}`);
-                    }}
-                    className="hover:underline hover:cursor-grab"
-                    key={key.id}
-                  >
-                    {key.keyWord}
-                  </div>
-                ))}
+                {Array.isArray(listKey) &&
+                  listKey?.map((key: any) => (
+                    <div
+                      onClick={() => {
+                        router.push(`/search?keyword=${key.keyWord}`);
+                      }}
+                      className="hover:underline hover:cursor-grab"
+                      key={key.id}
+                    >
+                      {key.keyWord}
+                    </div>
+                  ))}
               </div>
             </PopoverGroup>
             <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
@@ -138,30 +146,52 @@ export default function Header() {
               >
                 {/* {user?.fullName ? `Hello ${user?.fullName}` : ""} */}
               </p>
+              <PopoverShad>
+                <PopoverTrigger>
+                  <div className="cursor-pointer whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-3xl shadow-sm text-base font-medium text-white ">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      className="size-9"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"
+                      />
+                    </svg>
 
-              <div
-                className="cursor-pointer whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-3xl shadow-sm text-base font-medium text-white "
-                onClick={() => {}}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  className="size-9"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"
-                  />
-                </svg>
-
-                <div className="rounded-xl bg-red-600 px-2 absolute text-xs top-8 ml-7">
-                  0{" "}
-                </div>
-              </div>
+                    <div className="rounded-xl bg-red-600 px-2 absolute text-xs top-8 ml-7">
+                      {totalOnline + totalKiot || 0}
+                    </div>
+                  </div>
+                </PopoverTrigger>
+                <PopoverContent className="w-fit">
+                  <div className="flex flex-col gap-y-2 w-fit">
+                    <div
+                      onClick={() => {
+                        router.push("/cartOnline");
+                      }}
+                      className="flex flex-row justify-between items-center border-b-2 border-gray-300 pt-2 pb-4 hover:cursor-grab w-fit hover:bg-green-100"
+                    >
+                      <div>Gio hang Online - </div>
+                      <div className="rounded-xl  px-2">{totalOnline || 0}</div>
+                    </div>
+                    <div
+                      onClick={() => {
+                        router.push("/cartKiot");
+                      }}
+                      className="flex flex-row justify-between items-center  pt-2 pb-2 w-full hover:cursor-grab hover:bg-green-100"
+                    >
+                      <div>Gio hang Kiot - </div>
+                      <div className="rounded-xl  px-2">{totalKiot || 0}</div>
+                    </div>
+                  </div>
+                </PopoverContent>
+              </PopoverShad>
 
               <div
                 className="cursor-pointer ml-8 whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-3xl shadow-sm text-base font-medium text-white bg-green-600 hover:bg-green-700"

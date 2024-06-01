@@ -29,6 +29,7 @@ import { set } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import { useToast } from "@/components/ui/use-toast";
+import { useCartContext } from "@/provider/cart.provider";
 
 function BreadcrumbWithCustomSeparator({
   categories,
@@ -88,6 +89,7 @@ export default function ProductPage() {
   const [selectedLocation, setSelectedLocation] = useState<any>();
   const [quantity, setQuantity] = useState<number>(1);
   const { toast } = useToast();
+  const { addItemsOnline, addItemsKiot } = useCartContext();
 
   const idOfProduct = useParams().idOfProduct;
 
@@ -282,6 +284,11 @@ export default function ProductPage() {
                             .then((res) => res)
                             .catch((e) => console.log(e));
                           if (data) {
+                            addItemsOnline({
+                              ...product,
+                              quantity,
+                              isKiot: false,
+                            });
                             toast({
                               title: "Them vao gio hang online thanh cong",
                             });
@@ -305,6 +312,11 @@ export default function ProductPage() {
                             .then((res) => res)
                             .catch((e) => console.log(e));
                           if (data) {
+                            addItemsKiot({
+                              ...product,
+                              quantity,
+                              isKiot: true,
+                            });
                             toast({
                               title: "Them vao gio hang kiot thanh cong",
                             });
