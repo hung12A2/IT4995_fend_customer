@@ -7,7 +7,7 @@ import ItemCardSmall from "./itemCardSmall";
 import { useRouter } from "next/navigation";
 
 export default function ShopCard({ shop }: { shop: any }) {
-  const idOfShop = shop.id;
+  const idOfShop = shop?.id;
   const avgRating = shop?.avgRating || 0;
   const numberOfProduct = shop?.numberOfProduct || 0;
   const router = useRouter();

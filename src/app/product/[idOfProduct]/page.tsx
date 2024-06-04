@@ -30,7 +30,17 @@ import { Input } from "@/components/ui/input";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import { useToast } from "@/components/ui/use-toast";
 import { useCartContext } from "@/provider/cart.provider";
+import ShopCard from "@/module/base/shopCard";
+import ShopCard2 from "@/module/base/shopCard2";
+import parse from "html-react-parser";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
+function formatDate(isoString: string) {
+  const date = new Date(isoString);
+  return `${date
+    .toLocaleTimeString("en-GB")
+    .slice(0, 5)} ${date.toLocaleDateString("en-GB")}`;
+}
 function BreadcrumbWithCustomSeparator({
   categories,
   categoriesId,
@@ -84,12 +94,15 @@ const Star = ({ rating }: { rating: number }) => {
 
 export default function ProductPage() {
   const [product, setProduct] = useState<any>({});
+  const [shop, setShop] = useState<any>();
   const [mainImg, setMainImg] = useState<any>({});
   const [location, setLocation] = useState<any>();
   const [selectedLocation, setSelectedLocation] = useState<any>();
   const [quantity, setQuantity] = useState<number>(1);
   const { toast } = useToast();
+  const [shopInfo, setShopInfo] = useState<any>({});
   const { addItemsOnline, addItemsKiot } = useCartContext();
+  const [listRating, setListRating] = useState<any>([]);
 
   const idOfProduct = useParams().idOfProduct;
 
@@ -99,6 +112,49 @@ export default function ProductPage() {
         .get(`products/${idOfProduct}`)
         .then((res) => res)
         .catch((e) => console.log(e));
+
+      let shopReturn: any = await axios
+        .get(`stores`, {
+          params: {
+            filter: {
+              where: {
+                id: productReturn?.idOfShop,
+              },
+            },
+          },
+        })
+        .then((res) => res)
+        .catch((e) => console.log(e));
+
+      setShop(shopReturn[0]);
+
+      let ratingReturn: any = await axios.get(`ratings`, {
+        params: {
+          filter: {
+            where: {
+              idOfShop: shopReturn[0]?.id,
+              idOfProduct: idOfProduct,
+            },
+          },
+        },
+      });
+
+      setListRating(ratingReturn);
+
+      let dataShopInfo: any = await axios
+        .get(`shop-infos`, {
+          params: {
+            filter: {
+              where: {
+                idOfShop: shopReturn[0]?.id,
+              },
+            },
+          },
+        })
+        .then((res) => res)
+        .catch((e) => console.log(e));
+
+      setShopInfo(dataShopInfo[0]);
 
       const dataLocation: any = await axios
         .get(`location-users`, {
@@ -338,6 +394,88 @@ export default function ProductPage() {
             </div>
           </div>
         </div>
+
+        <div className="w-2/3">
+          <ShopCard2 shop={shop} shopInfo={shopInfo} />
+        </div>
+
+        <div className="w-2/3 mt-6 bg-white p-8 flex flex-col ">
+          <div className="text-lg">CHI TIET SAN PHAM</div>
+          <div className="grid grid-cols-6 mt-8 gap-y-4">
+            <div className="col-span-1">Danh muc</div>
+            <div className="col-span-5">
+              <BreadcrumbWithCustomSeparator
+                categories={product?.cateName}
+                categoriesId={product?.idOfCategory}
+                name={product?.name}
+              />
+            </div>
+            <div className="col-span-1">Chi tiet san pham</div>
+            <div className="col-span-5">
+              {parse(product?.productDetails || "")}
+            </div>
+          </div>
+        </div>
+
+        <div className="p-8 w-1/2 bg-white mt-6">
+          <div className="text-lg">DANH GIA SAN PHAM</div>
+          <div className="mt-6 p-8 flex flex-row border-green-600 border-[1px] bg-green-50 w-fit">
+            <div className="flex flex-col">
+              <div className="flex flex-row gap-x-2 text-green-600 items-center">
+                <div className="text-2xl">
+                  {(shopInfo?.avgRating || 0).toFixed(1)}
+                </div>
+                <div>tren</div>
+                <div className="text-xl">5</div>
+              </div>
+              <div>
+                <Star rating={shopInfo?.avgRating} />
+              </div>
+            </div>
+            <div className="flex flex-row items-center gap-x-4 ml-16">
+              <div className="px-3 py-1 text-green-600 border-green-600 border-[1px] hover:cursor-grab">
+                Tat ca
+              </div>
+              <div className="px-3 py-1 border-[1px] border-gray-500 hover:cursor-grab">
+                5 sao
+              </div>
+              <div className="px-3 py-1 border-[1px] border-gray-500 hover:cursor-grab">
+                4 sao
+              </div>
+              <div className="px-3 py-1 border-[1px] border-gray-500 hover:cursor-grab">
+                3 sao
+              </div>
+              <div className="px-3 py-1 border-[1px] border-gray-500 hover:cursor-grab">
+                2 sao
+              </div>
+              <div className="px-3 py-1 border-[1px] border-gray-500 hover:cursor-grab">
+                1 sao
+              </div>
+            </div>
+          </div>
+          <div className="mt-6">
+            {listRating &&
+              listRating.map((rating: any, index: number) => {
+                return (
+                  <div className="flex flex-row gap-x-4 py-4 border-b-[1px] border-gray-300" key={index}>
+                    <div>
+                      <Avatar className="w-12 h-12">
+                        <AvatarImage src={rating?.userAvatar.url} />
+                        <AvatarFallback>HN</AvatarFallback>
+                      </Avatar>
+                    </div>
+                    <div className="flex flex-col gap-y-2">
+                      <div>{rating?.userName}</div>
+                      <div><Star  rating={rating?.rating}/></div>
+                      <div>{formatDate(rating?.createdAt)}</div>
+                      <div>{rating?.comment}</div>
+                    </div>
+                  </div>
+                );
+              })}
+          </div>
+        </div>
+
         <div className="w-full">
           <Footer />
         </div>

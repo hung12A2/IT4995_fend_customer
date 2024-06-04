@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { useFormContext } from "react-hook-form";
 import {
   FormField,
@@ -7,12 +8,13 @@ import {
   FormControl,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { FC, useCallback, useState } from "react";
+import { FC, use, useCallback, useEffect, useRef, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Badge } from "@/components/ui/badge";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-
+import { CalendarIcon } from "lucide-react";
+import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -144,7 +146,7 @@ export const Field = ({
                 type={type}
                 disabled={disabled}
                 placeholder={placeholder}
-                { ...field}
+                {...field}
               />
             </FormControl>
             <span className="text-xs text-red-500">
@@ -236,7 +238,6 @@ export const SelectField: FC<SelectFieldProps> = ({
 
   const handleUnselect = useCallback(
     (option?: any) => {
-      console.log(option);
       // does not given option => single select
       setValue(
         name,
@@ -383,6 +384,7 @@ export const SelectField: FC<SelectFieldProps> = ({
 };
 
 import { Checkbox } from "@/components/ui/checkbox";
+import { format } from "date-fns";
 
 export const CheckedField: FC<CheckedFieldProps> = ({ name, label }) => {
   const methods = useFormContext();
@@ -406,3 +408,230 @@ export const CheckedField: FC<CheckedFieldProps> = ({ name, label }) => {
     />
   );
 };
+
+export const ImgFieldMulti: FC<any> = ({
+  label,
+  helpText = "",
+  required,
+  name,
+  ...props
+}) => {
+  const formContext = useFormContext();
+  const { control, setValue, getValues } = formContext;
+  const [imgLinks, setImgLinks] = useState<string[]>([]); // Change to array
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleAddImg = (e: any) => {
+    if (!getValues(name)) {
+      setValue(name, e.target.files);
+      setImgLinks(
+        Array.from(e.target.files).map((file: any) => URL.createObjectURL(file))
+      );
+      return;
+    }
+    const newFiles = Array.from(e.target.files);
+    setValue(name, [...getValues(name), ...newFiles]); // Concatenate new files to current files
+    setImgLinks([
+      ...imgLinks,
+      ...newFiles.map((file: any) => URL.createObjectURL(file)),
+    ]); // Concatenate new URLs to current URLs
+  };
+
+  const handleDragOver = (e: any) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (e: any) => {
+    e.preventDefault();
+    setValue(name, e.dataTransfer.files); // Set all files
+    setImgLinks(
+      Array.from(e.dataTransfer.files).map((file: any) =>
+        URL.createObjectURL(file)
+      )
+    ); // Map all files to URLs
+  };
+
+  return (
+    <FormField
+      name={name}
+      control={control}
+      rules={{ required }}
+      render={({ field }) => {
+        let safeField = field.value || [];
+
+        const defaultValues = safeField.filter((item: any) => item.url);
+
+        return (
+          <>
+            <FormItem className="flex flex-col justify-between rounded-lg p-2 shadow-sm">
+              <FormLabel className=" ">{label}</FormLabel>
+              <FormControl>
+                <div
+                  onDrop={handleDrop}
+                  onDragOver={handleDragOver}
+                  className="flex flex-col justify-center w-full py-5 border-[1px] border-black border-dashed"
+                >
+                  <input
+                    className="w-full"
+                    placeholder="Chọn ảnh"
+                    type="file"
+                    onChange={handleAddImg}
+                    title="Chọn ảnh"
+                    ref={inputRef}
+                    hidden
+                    multiple={true}
+                  />
+                  <h1 className="mx-auto">Drag and drop File to upload</h1>
+                  <h1 className="mx-auto mt-2">Or</h1>
+                  <button
+                    className="p-4 py-2 bg-muted w-fit mx-auto rounded-md mt-4"
+                    onClick={() => inputRef.current?.click()}
+                  >
+                    Select Files
+                  </button>
+                  {imgLinks ? (
+                    <div className="mt-6">
+                      <div className="grid grid-cols-4 gap-x-4 px-3">
+                        {
+                          // @ts-ignore
+                          defaultValues?.map((imgLink, index) => (
+                            <div key={index} className="relative">
+                              <img
+                                key={index}
+                                src={imgLink.url || imgLink}
+                                className="mx-auto aspect-[9/16]"
+                                alt=""
+                              ></img>
+                              <CloseIcon
+                                className="absolute -top-4 -right-4 hover:cursor-grab border-[1px] border-gray-300 rounded-full bg-white hover:bg-gray-200"
+                                onClick={() => {
+                                  // Update form state
+                                  const newFiles = Array.from(getValues(name));
+                                  newFiles.splice(index, 1);
+                                  setValue(name, newFiles);
+                                }}
+                              />
+                            </div>
+                          ))
+                        }
+
+                        {
+                          // @ts-ignore
+                          imgLinks?.map((imgLink, index) => (
+                            <div key={index} className="relative">
+                              <img
+                                key={index}
+                                src={imgLink}
+                                className="mx-auto aspect-[9/16]"
+                                alt=""
+                              ></img>
+                              <CloseIcon
+                                className="absolute -top-4 -right-4 hover:cursor-grab border-[1px] border-gray-300 rounded-full bg-white hover:bg-gray-200"
+                                onClick={() => {
+                                  const newImgLinks = [...imgLinks];
+                                  newImgLinks.splice(
+                                    index + defaultValues.length,
+                                    1
+                                  );
+                                  setImgLinks(newImgLinks);
+
+                                  // Update form state
+                                  const newFiles = Array.from(getValues(name));
+                                  newFiles.splice(
+                                    index + defaultValues.length,
+                                    1
+                                  );
+                                  setValue(name, newFiles);
+                                }}
+                              />
+                            </div>
+                          ))
+                        }
+                      </div>
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          </>
+        );
+      }}
+      {...props}
+    />
+  );
+};
+
+export function DatePickerForm({
+  label,
+  helpText = "",
+  required,
+  name,
+  ...props
+}: any) {
+  const formContext = useFormContext();
+  const { control, setValue, getValues } = formContext;
+
+  return (
+    <FormField
+      control={control}
+      name={name}
+      rules={{ required }}
+      render={({ field }) => (
+        <FormItem className="flex flex-col">
+          <FormLabel>{label}</FormLabel>
+          <Popover>
+            <PopoverTrigger asChild>
+              <FormControl>
+                <Button
+                  variant={"outline"}
+                  className={cn(
+                    "w-[240px] pl-3 text-left font-normal",
+                    !field.value && "text-muted-foreground"
+                  )}
+                >
+                  {field.value ? (
+                    format(field.value, "PPP")
+                  ) : (
+                    <span>Pick a date</span>
+                  )}
+                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                </Button>
+              </FormControl>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+              <Calendar
+               classNames={{
+                caption: 'relative w-full h-fit',
+                caption_label: 'hidden',
+                vhidden: 'hidden',
+                caption_dropdowns:
+                  'flex justify-center z-10 w-fit left-[15%] relative top-5',
+                dropdown_month: 'mr-3',
+                nav: 'space-x-1 flex items-center justify-between w-full ',
+              }}
+
+                mode="single"
+                selected={field.value}
+                onSelect={field.onChange}
+                disabled={(date) =>
+                  date > new Date() || date < new Date("1900-01-01")
+                }
+                captionLayout="dropdown-buttons"
+                fromYear={2010}
+                toYear={2024}
+                initialFocus
+              />
+            </PopoverContent>
+          </Popover>
+          <FormDescription>
+            Your date of birth is used to calculate your age.
+          </FormDescription>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
+}
