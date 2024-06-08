@@ -4,6 +4,8 @@ import "./globals.css";
 import { AuthProvider } from "@/provider/auth.provider";
 import { Toaster } from "@/components/ui/toaster";
 import { CartProvider } from "@/provider/cart.provider";
+import { useEffect } from "react";
+import { ChatProvider } from "@/provider/chat.provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,7 +25,9 @@ export default function RootLayout({
         <Toaster />
 
         <AuthProvider>
-          <CartProvider>{children}</CartProvider>
+          <CartProvider>
+            <ChatProvider>{children}</ChatProvider>
+          </CartProvider>
         </AuthProvider>
       </body>
     </html>

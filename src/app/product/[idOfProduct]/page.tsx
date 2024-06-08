@@ -34,6 +34,7 @@ import ShopCard from "@/module/base/shopCard";
 import ShopCard2 from "@/module/base/shopCard2";
 import parse from "html-react-parser";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import Chat from "@/module/chat/chat";
 
 function formatDate(isoString: string) {
   const date = new Date(isoString);
@@ -181,6 +182,7 @@ export default function ProductPage() {
 
   return (
     <>
+      <Chat />
       <Header />
 
       <div className="flex flex-col justify-center items-center bg-gray-100">
@@ -457,7 +459,10 @@ export default function ProductPage() {
             {listRating &&
               listRating.map((rating: any, index: number) => {
                 return (
-                  <div className="flex flex-row gap-x-4 py-4 border-b-[1px] border-gray-300" key={index}>
+                  <div
+                    className="flex flex-row gap-x-4 py-4 border-b-[1px] border-gray-300"
+                    key={index}
+                  >
                     <div>
                       <Avatar className="w-12 h-12">
                         <AvatarImage src={rating?.userAvatar.url} />
@@ -466,7 +471,9 @@ export default function ProductPage() {
                     </div>
                     <div className="flex flex-col gap-y-2">
                       <div>{rating?.userName}</div>
-                      <div><Star  rating={rating?.rating}/></div>
+                      <div>
+                        <Star rating={rating?.rating} />
+                      </div>
                       <div>{formatDate(rating?.createdAt)}</div>
                       <div>{rating?.comment}</div>
                     </div>

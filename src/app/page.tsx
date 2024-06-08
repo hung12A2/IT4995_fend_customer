@@ -9,7 +9,8 @@ import ItemCard from "@/module/base/itemCard";
 import Footer from "@/module/Footer";
 import { getDistance } from "@/utils/getDistance";
 import LocationCard from "@/module/base/locationCard";
-import { set } from "react-hook-form";
+import Chat from "@/module/chat/chat";
+
 
 export default function Home() {
   const route = useRouter();
@@ -72,23 +73,25 @@ export default function Home() {
 
       let listDistance: any = [];
 
-      // listDistance = await Promise.all(
-      //   dataKiotNear.map(async (kiot: any) => {
-      //     const to = `${dataLocation[0].geometry.lat},${dataLocation[0].geometry.lng}`;
-      //     const from = `${kiot.pickUpGeometry.lat},${kiot.pickUpGeometry.lng}`;
-      //     const distanceData = await getDistance(from, to);
-      //     const distance =
-      //       +distanceData.rows[0].elements[0].distance.text.split(" ")[0];
+      listDistance = await Promise.all(
+        dataKiotNear.map(async (kiot: any) => {
+          const to = `${dataLocation[0].geometry.lat},${dataLocation[0].geometry.lng}`;
+          const from = `${kiot.pickUpGeometry.lat},${kiot.pickUpGeometry.lng}`;
+          const distanceData = await getDistance(from, to);
+          const distance =
+            +distanceData.rows[0].elements[0].distance.text.split(" ")[0];
 
-      //     const estimateTime =
-      //       +distanceData.rows[0].elements[0].duration.text.split(" ")[0];
-      //     return {
-      //       distance,
-      //       estimateTime,
-      //       kiotId: kiot.id,
-      //     };
-      //   })
-      // );
+          const estimateTime =
+            +distanceData.rows[0].elements[0].duration.text.split(" ")[0];
+          return {
+            distance,
+            estimateTime,
+            kiotId: kiot.id,
+          };
+        })
+      );
+
+      
       let dataProductKiot: any = [];
 
       if (dataKiotNear.length > 0) {
@@ -125,8 +128,11 @@ export default function Home() {
 
     fetchData();
   }, []);
+
+
   return (
     <>
+      <Chat />
       <Header />
 
       <div className="flex flex-col justify-center items-center bg-gray-100">
@@ -153,7 +159,7 @@ export default function Home() {
           <div className="shadow-lg border-gray-200 bg-white px-4 py-4">
             <h1 className="text-xl mt-6 text-gray-700">Danh muc</h1>
             <div className="grid grid-cols-10 pb-4 mt-10 gap-x-3 gap-y-2">
-              {listCategory?.map((cate: any) => (
+              {listCategory && (listCategory || [])?.map((cate: any) => (
                 <div
                   onClick={() => route.push(`${cate.id}`)}
                   key={cate.id}
