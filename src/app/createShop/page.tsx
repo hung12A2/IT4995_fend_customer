@@ -13,6 +13,8 @@ import {
 import { useEffect, useState } from "react";
 import axios from "../../module/AxiosCustom/custome_Axios";
 import { useToast } from "@/components/ui/use-toast";
+import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
   const [listProvince, setListProvince] = useState([]);
@@ -31,6 +33,7 @@ export default function Page() {
   const formContext = useForm(defaultForm);
   const { handleSubmit, setValue } = formContext;
   const { toast } = useToast();
+  const router = useRouter();
 
   useEffect(() => {
     async function fetchData() {
@@ -341,6 +344,14 @@ export default function Page() {
       </div>
       <FormProvider {...formContext}>
         <div className="w-2/3 mt-6 bg-white">
+          <div
+            className="flex items-center hover:cursor-grab"
+            onClick={() => {
+              router.back();
+            }}
+          >
+            <NavigateBeforeIcon /> Tro lai
+          </div>
           <div className="px-32 py-6 border-b-[1px] border-gray-300">
             Thong tin shop
           </div>

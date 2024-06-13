@@ -18,7 +18,7 @@ import {
 import { set } from "date-fns";
 import { number } from "zod";
 import { FormProvider, useForm } from "react-hook-form";
-import { SelectField, TextField } from "./fieldBase";
+import { ImgFieldMulti, SelectField, TextField } from "./fieldBase";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
 import StarBorderPurple500Icon from "@mui/icons-material/StarBorderPurple500";
@@ -55,11 +55,15 @@ export default function OrderCard({ order }: { order: any }) {
   const items = order?.items;
   const status = order?.status;
   const formContext = useForm({});
+  const formReturnContext = useForm({});
   const { handleSubmit } = formContext;
+  const { handleSubmit: handleSubmitReturn } = formReturnContext;
   const { user } = useAuthContext();
+  const router = useRouter();
 
   const [openRatingForm, setOpenRatingForm] = useState(false);
   const [openViewRating, setOpenViewRating] = useState(false);
+  const [openReturn, setOpenReturn] = useState(false);
   const [listRating, setListRating] = useState([]);
 
   useEffect(() => {
@@ -94,7 +98,7 @@ export default function OrderCard({ order }: { order: any }) {
     fetchData();
   }, [order?.id, items]);
   return (
-    <div className="bg-white mt-4 flex flex-col px-6 pb-6">
+    <div className="bg-white mt-4 flex flex-col px-6 pb-6 hover:cursor-pointer">
       <Dialog open={openRatingForm} onOpenChange={setOpenRatingForm}>
         <DialogContent>
           <DialogHeader>
@@ -138,7 +142,7 @@ export default function OrderCard({ order }: { order: any }) {
                         <TextField
                           required={true}
                           name={`comment_${product?.id}`}
-                          label="Danh gia"
+                          label="Nhan xet"
                           placeholder="Danh gia cua ban ve san pham nay"
                         ></TextField>
                       </div>
@@ -204,6 +208,122 @@ export default function OrderCard({ order }: { order: any }) {
           </div>
         </DialogContent>
       </Dialog>
+      <Dialog open={openReturn} onOpenChange={setOpenReturn}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Thong tin hoan hang</DialogTitle>
+          </DialogHeader>
+          <div>
+            <div className="py-2 border-b-[1px] border-gray-300 ">
+              DON HANG: <span>{order?.id.slice(1, 10).toUpperCase()}</span>
+            </div>
+            {items &&
+              items.map((item: any) => {
+                const product = item?.product;
+                return (
+                  <div
+                    className="py-4 border-b-[1px] border-gray-300 flex justify-between items-center"
+                    key={item.id}
+                    onClick={() => {
+                      router.push(`/user/purchase/order/${order?.id}`);
+                    }}
+                  >
+                    <div className="flex flex-row gap-x-2">
+                      <img
+                        src={product?.image[0].url}
+                        alt="img"
+                        className="w-20 aspect-square rounded-sm"
+                      />
+                      <div className="flex flex-col gap-y-1">
+                        <div>{product?.name}</div>
+                        <div>x{item?.quantity}</div>
+                        <div className="text-sm text-green-600 border-green-600 border-[1px] px-1">
+                          Tra hang mien phi 15 ngay
+                        </div>
+                      </div>
+                    </div>
+                    <div>{product?.price}d</div>
+                  </div>
+                );
+              })}
+
+            <FormProvider {...formReturnContext}>
+              <div className="mt-4">
+                <TextField
+                  required={true}
+                  name={`reason`}
+                  label="Ly do hoan hang"
+                  placeholder="Ly do hoan hang"
+                ></TextField>
+              </div>
+              <div className="mb-4">
+                <ImgFieldMulti
+                  name="images"
+                  label="Mo ta hinh anh"
+                  required={true}
+                />
+              </div>
+              <div className="h-[1px] w-full bg-gray-300 mb-4"></div>
+              <div className="flex flex-col">
+                <div className="text-xl font-medium mb-4">
+                  Thong tin hoan tien
+                </div>
+                <div className="flex flex-row gap-x-1 items-center">
+                  <div className="w-[150px]"> So tien hoan lai: </div>
+                  <span className="text-xl">{order?.priceOfAll}d</span>
+                </div>
+                <div className="flex flex-row gap-x-1 my-2 items-center">
+                  <div className="w-[150px]"> Hoan tien vao: </div>
+                  <span className="">So du tai khoan LunaShop</span>
+                </div>
+                <div></div>
+              </div>
+              <div className="flex flex-row justify-end items-center mt-6 gap-x-4">
+                <Button
+                  onClick={() => {
+                    setOpenReturn(false);
+                  }}
+                >
+                  Huy
+                </Button>
+                <Button
+                  className="text-white bg-green-600 hover:bg-green-500"
+                  onClick={handleSubmitReturn(async (data: any) => {
+                    let dataForm = new FormData();
+                    dataForm.append("reason", data.reason);
+                    if (data?.images) {
+                      Array.from(data?.images).forEach((item: any) => {
+                        dataForm.append("images", item);
+                      });
+                    }
+                    const dataFetch: any = await axios
+                      .post(`orders/returned/order/${order?.id}`, dataForm, {
+                        headers:{
+                          'Content-Type': 'multipart/form-data'
+                        }
+                      })
+                      .then((res) => res)
+                      .catch((e) => console.log(e));
+
+                    if (dataFetch?.code == 200) {
+                      toast({
+                        title: "Da gui yeu cau hoan hang",
+                      });
+                    } else {
+                      toast({
+                        title: "Gui yeu cau hoan hang that bai",
+                      });
+                    }
+                    setOpenRatingForm(false);
+                  })}
+                >
+                  Hoan thanh
+                </Button>
+              </div>
+            </FormProvider>
+          </div>
+        </DialogContent>
+      </Dialog>
       <Dialog open={openViewRating} onOpenChange={setOpenViewRating}>
         <DialogContent>
           <DialogHeader>
@@ -260,7 +380,9 @@ export default function OrderCard({ order }: { order: any }) {
             <StoreIcon fontSize="small" /> Xem shop
           </div>
         </div>
-        {(status == "received" || status == "rating") && (
+        {(status == "received" ||
+          status == "rating" ||
+          status == "delivered") && (
           <div className="text-lg text-green-600">HOAN THANH</div>
         )}
         {status == "returned" && (
@@ -276,7 +398,8 @@ export default function OrderCard({ order }: { order: any }) {
           status != "rating" &&
           status != "returned" &&
           status != "canceled" &&
-          status != "rejected" && (
+          status != "rejected" &&
+          status != "delivered" && (
             <div className="text-lg text-green-600">CHO GIAO HANG</div>
           )}
 
@@ -291,6 +414,9 @@ export default function OrderCard({ order }: { order: any }) {
               <div
                 className="py-4 border-b-[1px] border-gray-300 flex justify-between items-center"
                 key={item.id}
+                onClick={() => {
+                  router.push(`/user/purchase/order/${order?.id}`);
+                }}
               >
                 <div className="flex flex-row gap-x-2">
                   <img
@@ -336,8 +462,36 @@ export default function OrderCard({ order }: { order: any }) {
                 Xem danh gia
               </div>
             )}
-            {status == "received" && (
-              <div className="px-4 py-2 border-[1px] border-gray-300 hover:bg-gray-200 hover:cursor-grab">
+            {status == "delivered" && (
+              <div
+                onClick={async () => {
+                  const data: any = await axios
+                    .post(`orders/received/order/${order?.id}`)
+                    .then((res) => res)
+                    .catch((e) => console.log(e));
+
+                  if (data?.code == 200) {
+                    toast({
+                      title: "Da nhan hang thanh cong",
+                    });
+                  } else {
+                    toast({
+                      title: "Da nhan hang that bai",
+                    });
+                  }
+                }}
+                className="px-4 py-2 border-[1px] border-gray-300 hover:bg-green-500 bg-green-600 text-white hover:cursor-grab"
+              >
+                Da nhan hang
+              </div>
+            )}
+            {status == "delivered" && (
+              <div
+                className="px-4 py-2 border-[1px] border-gray-300 hover:bg-gray-200 hover:cursor-grab"
+                onClick={() => {
+                  setOpenReturn(true);
+                }}
+              >
                 Tra hang/ hoan tien
               </div>
             )}
@@ -349,15 +503,6 @@ export default function OrderCard({ order }: { order: any }) {
                 Mua Lai
               </div>
             )}
-            {status != "received" &&
-              status != "rating" &&
-              status != "returned" &&
-              status != "canceled" &&
-              status != "rejected" && (
-                <div className="px-4 py-2 border-[1px] border-gray-300 hover:bg-gray-200 hover:cursor-grab">
-                  Da nhan hang
-                </div>
-              )}
 
             <div className="px-4 py-2 border-[1px] border-gray-300 hover:bg-gray-200 hover:cursor-grab">
               Lien he nguoi ban

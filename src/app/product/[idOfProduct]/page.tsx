@@ -186,7 +186,7 @@ export default function ProductPage() {
       <Header />
 
       <div className="flex flex-col justify-center items-center bg-gray-100">
-        <div className="w-2/3 mt-[120px]">
+        <div className="w-2/3 mt-[150px]">
           <div>
             <BreadcrumbWithCustomSeparator
               categories={product?.cateName}

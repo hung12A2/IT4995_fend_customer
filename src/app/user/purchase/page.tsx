@@ -40,8 +40,10 @@ export default function Page() {
         .then((res) => res)
         .catch((e) => console.log(e));
 
-      const listIdShop = dataReturn.map((item: any) => item.idOfShop);
-      const listIdOrder = dataReturn.map((item: any) => item.listIdOrder);
+        console.log(dataReturn);
+
+      const listIdShop = dataReturn?.map((item: any) => item.idOfShop);
+      const listIdOrder = dataReturn?.map((item: any) => item.listIdOrder);
 
       const dataShop: any = await axios.get(`stores`, {
         params: {
@@ -139,7 +141,7 @@ export default function Page() {
   return (
     <div className="bg-gray-100 flex flex-col justify-center items-center">
       <Header />
-      <div className="mt-[120px] w-2/3 flex flex-row">
+      <div className="mt-[150px] w-2/3 flex flex-row">
         <div className="mr-8">
           <div className="flex flex-row gap-x-4 justify-center ">
             <Avatar className="w-12 h-12">

@@ -161,7 +161,7 @@ export default function Home() {
             <div className="grid grid-cols-10 pb-4 mt-10 gap-x-3 gap-y-2">
               {listCategory && (listCategory || [])?.map((cate: any) => (
                 <div
-                  onClick={() => route.push(`${cate.id}`)}
+                  onClick={() => route.push(`/search?category=${JSON.stringify([cate.id])}`)}
                   key={cate.id}
                   className="flex flex-col items-center justify-center hover:cursor-grab p-2"
                 >

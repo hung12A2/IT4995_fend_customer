@@ -24,8 +24,18 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useAuthContext } from "@/provider/auth.provider";
 import SearchIcon from "@mui/icons-material/Search";
 import axios from "../../module/AxiosCustom/custome_Axios";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useCartContext } from "@/provider/cart.provider";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import CheckIcon from "@mui/icons-material/Check";
+import FacebookIcon from "@mui/icons-material/Facebook";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 
 const solutions = [
   {
@@ -61,11 +71,36 @@ const solutions = [
   },
 ];
 
+function formatDate(date: string) {
+  const dateObj = new Date(date);
+
+  const formattedDate = `${dateObj
+    .toLocaleTimeString("vi-VN")
+    .slice(0, 5)} ${dateObj.toLocaleDateString("vi-VN")}`;
+
+  return formattedDate;
+}
+
+function formatString(str: string, length: number) {
+  return str.length > length ? str.substring(0, length) + "..." : str;
+}
+
 export default function Header() {
   const authenContext = useAuthContext();
-  const { user, isAuthenticated } = authenContext;
+  const { user, isAuthenticated, logout } = authenContext;
   const { totalKiot, totalOnline } = useCartContext();
   const [listKey, setListKey] = useState<any[]>([]);
+  const searchParams = useSearchParams();
+  const [listNoti, setListNoti] = useState<any[]>([]);
+
+  const [keyWord, setKeyWord] = useState<string>(
+    searchParams.get("keyword") || ""
+  );
+  const params = useParams();
+  const [typeSearch, setTypeSearch] = useState<string>(
+    params?.idOfShop ? "inShop" : "inAll"
+  );
+
   const router = useRouter();
   useEffect(() => {
     async function fetchData() {
@@ -82,19 +117,168 @@ export default function Header() {
         .catch((err) => console.log(err));
 
       setListKey(dataKeys);
+
+      const res: any = await axios
+        .get(`notifications`, {
+          params: {
+            order: "createdAt DESC",
+            filter: {
+              limit: 5,
+              where: {
+                idOfUser: user?.id,
+              },
+            },
+          },
+        })
+        .then((res) => res.data)
+        .catch((e) => console.log(e));
+      setListNoti(res);
     }
 
     fetchData();
-  }, []);
+  }, [user?.id]);
 
   return (
     <Popover className="relative bg-white z-20 ">
       <div className="bg-green-500  fixed top-0 right-0 left-0 ">
         <div className="mx-auto z-10 w-full  md:w-2/3">
+          <div className="flex flex-row justify-between mt-2 text-white">
+            <div className="flex flex-row items-center">
+              <div
+                className="hover:cursor-grab hover:text-gray-200 text-sm pr-2 border-r-[1px] border-gray-300"
+                onClick={() => {
+                  router.push(`createShop`);
+                }}
+              >
+                Kenh nguoi ban
+              </div>{" "}
+              <div
+                className="hover:cursor-grab hover:text-gray-200 text-sm pl-2"
+                onClick={() => {
+                  router.push(`https://www.facebook.com/hung131119782002`);
+                }}
+              >
+                Ket noi
+                <FacebookIcon className="ml-2" />
+              </div>
+            </div>
+
+            <div className="flex flex-row justify-end items-center">
+              <HoverCard>
+                <HoverCardTrigger>
+                  <div className="text-sm mr-6 flex flex-row  items-center hover:cursor-grab">
+                    <NotificationsIcon /> Thong bao
+                  </div>
+                </HoverCardTrigger>
+                <HoverCardContent className="w-fit">
+                  <div>
+                    {listNoti &&
+                      listNoti?.map((item: any) => {
+                        return (
+                          <div
+                            onClick={() => {
+                              if (!item?.idOfOrder.includes("VNP")) {
+                                router.push(
+                                  `/user/purchase/order/${item?.idOfOrder}`
+                                );
+                              } else {
+                                router.push(
+                                  `/user/wallet/rechargesuccess?${
+                                    item?.idOfOrder.split("-")[1]
+                                  }`
+                                );
+                              }
+                            }}
+                            key={item?.id}
+                            className="px-4 py-4 border-b-[1px] border-gray-200 hover:cursor-pointer w-[500px] hover:bg-gray-100 flex flex-row justify-between"
+                          >
+                            <div className="flex flex-row gap-x-4 ">
+                              <img
+                                src={
+                                  item?.image?.url ||
+                                  "https://nld.mediacdn.vn/291774122806476800/2022/12/28/avatar-the-way-of-water-1670943667-1672220380184583234571.jpeg"
+                                }
+                                alt="img"
+                                className="w-20 h-20"
+                              />
+                              <div className="flex flex-col">
+                                <div className="">{item?.title}</div>
+                                <div className="text-sm font-light mt-2">
+                                  {formatString(item?.content, 150)}
+                                </div>
+                                <div className="text-sm font-light mt-1">
+                                  {formatDate(item?.createdAt)}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                  </div>
+                  <div
+                    className="w-full flex justify-center items-center py-2 hover:cursor-grab hover:bg-gray-100"
+                    onClick={() => {
+                      router.push(`user/notification/order`);
+                    }}
+                  >
+                    Xem chi tiet{" "}
+                  </div>
+                </HoverCardContent>
+              </HoverCard>
+
+              <HoverCard>
+                <HoverCardTrigger>
+                  <div className="flex flex-row gap-x-2 justify-center items-center mr-4 hover:cursor-grab">
+                    <Avatar className="w-6 h-6">
+                      <AvatarImage src={user?.avatar?.url} />
+                      <AvatarFallback>CN</AvatarFallback>
+                    </Avatar>
+                    <div className="text-sm">{user?.fullName || user?.id}</div>
+                  </div>
+                </HoverCardTrigger>
+                <HoverCardContent className="w-fit">
+                  <div className="flex flex-col">
+                    <div
+                      className="py-2 px-4 hover:cursor-grab hover:bg-gray-200 border-b-[1px] border-gray-200"
+                      onClick={() => {
+                        router.push("user/account/profile");
+                      }}
+                    >
+                      Thong tin tai khoan
+                    </div>
+                    <div
+                      className="py-2 px-4 hover:cursor-grab hover:bg-gray-200 border-b-[1px] border-gray-200"
+                      onClick={() => {
+                        router.push("user/purchase");
+                      }}
+                    >
+                      Don mua online
+                    </div>
+                    <div
+                      className="py-2 px-4 hover:cursor-grab hover:bg-gray-200 border-b-[1px] border-gray-200"
+                      onClick={() => {
+                        localStorage.removeItem("user");
+                        localStorage.removeItem("token");
+                        logout();
+                        router.push("/");
+                      }}
+                    >
+                      Dang xuat
+                    </div>
+                  </div>
+                </HoverCardContent>
+              </HoverCard>
+            </div>
+          </div>
           <div className="flex justify-between items-center py-6 md:py-2 md:justify-start">
             <div className="flex justify-start lg:w-0 lg:flex-1">
               <div className="flex justify-start lg:w-0 lg:flex-1">
-                <div className="cursor-pointer flex items-center">
+                <div
+                  className="cursor-pointer flex items-center"
+                  onClick={() => {
+                    router.push("/");
+                  }}
+                >
                   <img
                     className="h-8 w-auto sm:h-10"
                     src="https://static.wixstatic.com/media/2cd43b_17040a042929442094fd1a2179d5bd29~mv2.png/v1/fill/w_320,h_320,q_90/2cd43b_17040a042929442094fd1a2179d5bd29~mv2.png"
@@ -114,22 +298,102 @@ export default function Header() {
             </div>
             <PopoverGroup
               as="nav"
-              className="hidden md:flex md:flex-col space-x-10  w-1/2 md:space-x-0 md:items-center"
+              className="hidden md:flex md:flex-col space-x-10  w-[840px] pl-8 md:space-x-0 md:items-center"
             >
-              <div className="flex flex-row items-center -space-x-8 w-full mt-4 mb-2">
+              <div className="flex flex-row items-center -space-x-[200px] w-full mt-4 mb-2">
                 <input
                   type="text"
                   placeholder="Search"
                   className="w-full px-4 py-2 focus:outline-offset-4"
+                  value={keyWord}
+                  onChange={(e) => {
+                    setKeyWord(e.target.value);
+                  }}
+                  onKeyDown={async (e) => {
+                    if (e.key === "Enter") {
+                      const data = await axios
+                        .post(`searches`, {
+                          keyWord,
+                        })
+                        .then((res) => res)
+                        .catch((e) => console.log(e));
+
+                      if (params?.idOfShop) {
+                        router.push(
+                          `/shop/${params?.idOfShop}?keyword=${keyWord}`
+                        );
+                      } else {
+                        router.push(`/search?keyword=${keyWord}`);
+                      }
+                    }
+                  }}
                 ></input>
-                <SearchIcon className="" />
+                <div className="flex flex-row w-fit items-center gap-x-4">
+                  <PopoverShad>
+                    <PopoverTrigger>
+                      <div className="flex flex-row">
+                        <div className=" w-[125px] ">
+                          {!params?.idOfShop
+                            ? "Trong LunaShop"
+                            : "Trong shop nay"}
+                        </div>{" "}
+                        <ExpandMoreIcon className="ml-1" />
+                      </div>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-fit">
+                      <div className=" flex flex-col gap-y-2 w-fit">
+                        {params?.idOfShop && (
+                          <>
+                            <div className="py-2 px-4 flex flex-row gap-x-2 items-center hover:cursor-pointer hover:bg-gray-100">
+                              Trong shop nay
+                              <CheckIcon color="success" />
+                            </div>
+                            <div
+                              className="py-2 px-4 hover:cursor-pointer hover:bg-gray-100"
+                              onClick={() => {
+                                setTypeSearch("inAll");
+                                router.push(`/search?keyword=${keyWord}`);
+                              }}
+                            >
+                              Trong LunaShop
+                            </div>
+                          </>
+                        )}
+                        {!params?.idOfShop && (
+                          <>
+                            <div className="py-2 px-4 hover:cursor-pointer hover:bg-gray-100 flex flex-row gap-x-2 items-center">
+                              Trong LunaShop
+                              <CheckIcon color="success" />
+                            </div>
+                            <div
+                              className="py-2 px-4 hover:cursor-pointer hover:bg-gray-100"
+                              onClick={() => {
+                                setTypeSearch("inShop");
+                              }}
+                            >
+                              Trong shop nay
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    </PopoverContent>
+                  </PopoverShad>
+
+                  <SearchIcon className="" />
+                </div>
               </div>
               <div className="text-white flex flex-row justify-start gap-x-3 w-full text-sm ">
                 {Array.isArray(listKey) &&
                   listKey?.map((key: any) => (
                     <div
                       onClick={() => {
-                        router.push(`/search?keyword=${key.keyWord}`);
+                        if (params?.idOfShop) {
+                          router.push(
+                            `/shop/${params?.idOfShop}?keyword=${key?.keyWord}`
+                          );
+                        } else {
+                          router.push(`/search?keyword=${key?.keyWord}`);
+                        }
                       }}
                       className="hover:underline hover:cursor-grab"
                       key={key.id}
@@ -148,7 +412,7 @@ export default function Header() {
               </p>
               <PopoverShad>
                 <PopoverTrigger>
-                  <div className="cursor-pointer whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-3xl shadow-sm text-base font-medium text-white ">
+                  <div className="cursor-pointer  whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-3xl shadow-sm text-base font-medium text-white ">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
@@ -164,7 +428,7 @@ export default function Header() {
                       />
                     </svg>
 
-                    <div className="rounded-xl bg-red-600 px-2 absolute text-xs top-8 ml-7">
+                    <div className="rounded-xl bg-red-600 px-2 absolute text-xs top-20 ml-7">
                       {totalOnline + totalKiot || 0}
                     </div>
                   </div>
@@ -192,19 +456,6 @@ export default function Header() {
                   </div>
                 </PopoverContent>
               </PopoverShad>
-
-              <div
-                className="cursor-pointer ml-8 whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-3xl shadow-sm text-base font-medium text-white bg-green-600 hover:bg-green-700"
-                onClick={() => {
-                  if (isAuthenticated) {
-                    console.log("logout");
-                  } else {
-                    console.log("login");
-                  }
-                }}
-              >
-                {isAuthenticated ? "Logout" : "Login"}
-              </div>
             </div>
           </div>
         </div>

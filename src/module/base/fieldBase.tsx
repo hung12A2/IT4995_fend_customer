@@ -457,14 +457,15 @@ export const ImgFieldMulti: FC<any> = ({
       control={control}
       rules={{ required }}
       render={({ field }) => {
-        let safeField = field.value || [];
+        let safeField = Array.isArray(field?.value)? (field?.value) : [];
 
-        const defaultValues = safeField.filter((item: any) => item.url);
+
+        const defaultValues = safeField?.filter((item: any) => item.url);
 
         return (
           <>
             <FormItem className="flex flex-col justify-between rounded-lg p-2 shadow-sm">
-              <FormLabel className=" ">{label}</FormLabel>
+              <FormLabel className=" my-4">{label}</FormLabel>
               <FormControl>
                 <div
                   onDrop={handleDrop}
@@ -494,7 +495,7 @@ export const ImgFieldMulti: FC<any> = ({
                       <div className="grid grid-cols-4 gap-x-4 px-3">
                         {
                           // @ts-ignore
-                          defaultValues?.map((imgLink, index) => (
+                          defaultValues?.map((imgLink: any, index) => (
                             <div key={index} className="relative">
                               <img
                                 key={index}

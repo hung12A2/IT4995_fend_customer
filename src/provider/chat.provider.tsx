@@ -135,7 +135,6 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
     });
 
     socket.on("server-list-msg", (data) => {
-      console.log(data);
       setListMsg(data);
     });
   }, [state]);
