@@ -24,6 +24,7 @@ import { cn } from "@/lib/utils";
 import StoreIcon from "@mui/icons-material/Store";
 import ChatIcon from "@mui/icons-material/Chat";
 import Chat from "@/module/chat/chat";
+import NavUser from "@/module/base/navUser";
 
 function formatDate(date: string) {
   const dateObj = new Date(date);
@@ -181,61 +182,7 @@ export default function Page() {
       <Header />
       <Chat />
       <div className="mt-[150px] w-2/3 flex flex-row">
-        <div className="mr-8">
-          <div className="flex flex-row gap-x-4 justify-center ">
-            <Avatar className="w-12 h-12">
-              <AvatarImage src={user?.avatar?.url} />
-              <AvatarFallback>HN</AvatarFallback>
-            </Avatar>
-            <div>
-              <div className="font-medium">
-                {user?.fullName || "Hung Nguyen"}
-              </div>
-              <div className="flex flex-row gap-x-1">
-                <EditIcon color="disabled" fontSize="small" />
-                <div className="text-gray-500 w-[92px]">Sua ho so</div>
-              </div>
-            </div>
-          </div>
-          <div className="mt-8 flex flex-row gap-x-4">
-            <div>
-              <Person2Icon />{" "}
-            </div>
-            <div className="flex flex-col gap-y-4 py-1">
-              <div>Tai khoan cua toi</div>
-              <div className="ml-2 text-gray-600 gap-y-4 flex flex-col">
-                <div className="hover:cursor-grab">Ho so</div>
-                <div
-                  className="hover:cursor-grab hover:text-green-600"
-                  onClick={() => {
-                    router.push("/user/account/address");
-                  }}
-                >
-                  Dia chi
-                </div>
-                <div className="hover:cursor-grab hover:text-green-600">
-                  Doi mat khau
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="mt-2 flex flex-row gap-x-4">
-            <div>
-              <ListAltIcon />{" "}
-            </div>
-            <div className="flex flex-col gap-y-4 py-1 hover:cursor-grab hover:text-green-600 text-green-600">
-              Don mua
-            </div>
-          </div>
-          <div className="mt-2 flex flex-row gap-x-4">
-            <div>
-              <NotificationsIcon />{" "}
-            </div>
-            <div className="flex flex-col gap-y-4 py-1 hover:cursor-grab hover:text-green-600">
-              Thong bao
-            </div>
-          </div>
-        </div>
+        <NavUser />
         <div className="flex flex-col w-full bg-white">
           <div className="flex flex-row justify-between items-center px-4 py-4 border-b-[1px] border-gray-200">
             <div

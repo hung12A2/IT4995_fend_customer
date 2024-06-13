@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import NavUser from "@/module/base/navUser";
 
 export default function Page() {
   const { user } = useAuthContext();
@@ -134,61 +135,7 @@ export default function Page() {
       />
       <Header />
       <div className="mt-[150px] w-2/3 flex flex-row">
-        <div className="mr-8">
-          <div className="flex flex-row gap-x-4 justify-center ">
-            <Avatar className="w-12 h-12">
-              <AvatarImage src={user?.avatar?.url} />
-              <AvatarFallback>HN</AvatarFallback>
-            </Avatar>
-            <div>
-              <div className="font-medium">
-                {user?.fullName || "Hung Nguyen"}
-              </div>
-              <div className="flex flex-row gap-x-1">
-                <EditIcon color="disabled" fontSize="small" />
-                <div className="text-gray-500 w-[92px]">Sua ho so</div>
-              </div>
-            </div>
-          </div>
-          <div className="mt-8 flex flex-row gap-x-4">
-            <div>
-              <Person2Icon />{" "}
-            </div>
-            <div className="flex flex-col gap-y-4 py-1">
-              <div>Tai khoan cua toi</div>
-              <div className="ml-2 text-gray-600 gap-y-4 flex flex-col">
-                <div className="hover:cursor-grab text-green-600">Ho so</div>
-                <div
-                  className="hover:cursor-grab hover:text-green-600"
-                  onClick={() => {
-                    router.push("/user/account/address");
-                  }}
-                >
-                  Dia chi
-                </div>
-                <div className="hover:cursor-grab hover:text-green-600">
-                  Doi mat khau
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="mt-2 flex flex-row gap-x-4">
-            <div>
-              <ListAltIcon />{" "}
-            </div>
-            <div className="flex flex-col gap-y-4 py-1 hover:cursor-grab hover:text-green-600">
-              Don mua
-            </div>
-          </div>
-          <div className="mt-2 flex flex-row gap-x-4">
-            <div>
-              <NotificationsIcon />{" "}
-            </div>
-            <div className="flex flex-col gap-y-4 py-1 hover:cursor-grab hover:text-green-600">
-              Thong bao
-            </div>
-          </div>
-        </div>
+        <NavUser />
         <div className="bg-white py-6 pr-8 pl-8 flex flex-col w-full">
           <div className="border-b-2 border-gray-200 pb-4">
             <div className="text-lg">Ho so cua toi</div>
