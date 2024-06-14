@@ -144,7 +144,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       type: "onlineItems",
       payload: {
         onlineItems,
-        totalOnline: onlineItems.length,
+        totalOnline: onlineItems?.length,
       },
     });
   };
@@ -168,7 +168,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       type: "kiotItems",
       payload: {
         kiotItems,
-        totalKiot: kiotItems.length,
+        totalKiot: kiotItems?.length,
       },
     });
   };

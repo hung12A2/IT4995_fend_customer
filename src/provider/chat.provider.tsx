@@ -10,6 +10,7 @@ const initialState = {
   selectedConversation: null,
   listConversation: [],
   listMsg: [],
+  openFormChat: false,
 };
 
 const reducer = (state: any, action: any) => {
@@ -30,6 +31,12 @@ const reducer = (state: any, action: any) => {
       return {
         ...state,
         selectedConversation: action.payload,
+      };
+    }
+    case "setOpenFormChat": { 
+      return {
+        ...state,
+        openFormChat: action.payload,
       };
     }
   }
@@ -66,6 +73,13 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
   const setSelectedConversation = (data: any) => {
     dispatch({
       type: "setSelectedConversation",
+      payload: data,
+    });
+  };
+
+  const setOpenFormChat = (data: any) => {
+    dispatch({
+      type: "setOpenFormChat",
       payload: data,
     });
   };
@@ -117,7 +131,7 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
 
     socket.on("server-send-msg", (data) => {
       const { listMsg, listConversation } = state;
-      if (listMsg?.[0] && listMsg[0].id != data.id) {
+      if ((listMsg?.[0] && listMsg[0].id != data.id) || ( listMsg?.length == 0)) {
         setListMsg([data, ...listMsg]);
       }
 
@@ -152,6 +166,7 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
     setListConversation,
     setListMsg,
     setSelectedConversation,
+    setOpenFormChat,
   };
 
   return <ChatContext.Provider value={value}>{children}</ChatContext.Provider>;

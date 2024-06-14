@@ -12,9 +12,7 @@ export default function NavUser() {
   const { user } = useAuthContext();
 
   const router = useRouter();
-  const link = window.location.pathname;
-
-  console.log(link);
+  const link = window?.location?.pathname;
 
   return (
     <div className="mr-8">

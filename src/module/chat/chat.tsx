@@ -16,8 +16,7 @@ function formatString(str: string, length: number) {
 }
 
 export default function Chat() {
-  const [openFormChat, setOpenFormChat] = useState(false);
-  const { listConversation, listMsg, selectedConversation, setSelectedConversation} = useChatContext();
+  const { listConversation, listMsg, selectedConversation, setSelectedConversation, openFormChat, setOpenFormChat} = useChatContext();
   const [inputMsg, setInputMsg] = useState("");
   const { user } = useAuthContext();
 

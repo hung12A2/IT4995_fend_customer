@@ -36,7 +36,10 @@ export default function ShopCard2({
             <div className="px-2 hover:cursor-grab hover:bg-green-500 bg-green-600 text-white text-sm">
               <ChatIcon fontSize="small" /> Chat
             </div>
-            <div className="px-2 hover:cursor-grab hover:bg-green-100 border-gray-300 border-[1px] text-sm">
+            <div className="px-2 hover:cursor-grab hover:bg-green-100 border-gray-300 border-[1px] text-sm"
+              onClick={() => {
+                router.push(`/shop/${idOfShop}`);
+              }}>
               <StoreIcon fontSize="small" /> Xem shop
             </div>
           </div>

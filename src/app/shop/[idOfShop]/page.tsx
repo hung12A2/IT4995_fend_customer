@@ -19,16 +19,23 @@ import ItemCard from "@/module/base/itemCard";
 import ShopCard from "@/module/base/shopCard";
 import SearchIcon from "@mui/icons-material/Search";
 import KiotCard from "@/module/base/KiotCard";
+import Chat from "@/module/chat/chat";
+import { useChatContext } from "@/provider/chat.provider";
+import { useAuthContext } from "@/provider/auth.provider";
+import { socket } from "@/module/socket/socket";
 
 export default function Home() {
   const params = useParams();
   const searchParams = useSearchParams();
   const idOfShop = params.idOfShop;
-
-  console.log(idOfShop);
+  const { user } = useAuthContext();
   const [listCategory, setListCategory] = useState([]);
   const [listProduct, setListProduct] = useState([]);
+  const [Shop, setShop] = useState<any>({});
+  const [shopInfo, setShopInfo] = useState<any>({});
   const category: any = searchParams.get("category");
+  const { openFormChat, setOpenFormChat, setSelectedConversation } =
+    useChatContext();
 
   let categoryObj = useMemo(() => {
     return JSON.parse(category) || [];
@@ -62,11 +69,29 @@ export default function Home() {
         .get("/categories")
         .then((res) => res)
         .catch((e) => console.log(e));
+      const shopData: any = await axios
+        .get(`/stores/${idOfShop}`)
+        .then((res) => res);
+      const shopInfoData: any = await axios
+        .get(`/shop-infos`, {
+          params: {
+            filter: {
+              where: {
+                idOfShop: idOfShop,
+              },
+            },
+          },
+        })
+        .then((res) => res);
 
+      setShop(shopData);
+      console.log(shopData);
+      console.log(shopInfoData);
+      setShopInfo(shopInfoData[0]);
       setListCategory(response);
     }
     fetchData();
-  }, []);
+  }, [idOfShop]);
 
   useEffect(() => {
     async function fetchData() {
@@ -117,11 +142,79 @@ export default function Home() {
   return (
     <>
       <Header />
+      <Chat />
 
       <div className="flex flex-col justify-center items-center bg-gray-100">
+        <div className="bg-white flex flex-row justify-center mt-[120px] w-full ">
+          <div className="w-2/3 pt-[50px] flex flex-row pb-8 items-center">
+            <div className="relative">
+              <div className="absolute flex flex-col gap-y-2 left-4 top-2">
+                <div className="flex flex-row gap-x-3">
+                  <img
+                    src={Shop?.avatar?.url}
+                    className="w-[72px] h-[72px] rounded-full"
+                    alt=""
+                  />
+                  <div className="flex flex-col gap-y-1 text-white">
+                    <div className="text-lg font-medium">{Shop?.name}</div>
+                    <div>Online 3 gio truoc</div>
+                  </div>
+                </div>
+                <div className="flex flex-row gap-x-2 w-full">
+                  <div className="text-white border-white border-[1px] w-1/2 hover:cursor-grab flex justify-center">
+                    + Theo doi
+                  </div>
+                  <div
+                    className="text-white border-white border-[1px] w-1/2 hover:cursor-grab flex justify-center"
+                    onClick={() => {
+                      socket.emit(`inviteToRoom`, {
+                        idOfUser: user?.id,
+                        idOfShop: Shop?.id,
+                      });
+
+                      socket.emit(`joinConversation`, {
+                        idOfUser: user?.id,
+                        idOfShop: Shop?.id,
+                      });
+                      setSelectedConversation({
+                        idOfUser: user?.id,
+                        idOfShop: Shop?.id,
+                        shop: Shop,
+                      });
+                      setOpenFormChat(true);
+                    }}
+                  >
+                    Chat
+                  </div>
+                </div>
+              </div>
+              <img
+                src={Shop?.coverImage?.url}
+                className="w-[390px] h-[135px]"
+                alt="no alt"
+              />
+            </div>
+            <div className="pl-[50px] flex flex-col gap-y-6">
+              <div>San pham: {shopInfo?.numberOfProduct}</div>
+              <div>Danh gia trung binh: {shopInfo?.avgRating}</div>
+              <div>So danh gia: {shopInfo?.numberOfRating}</div>
+            </div>
+            <div className="pl-[50px] flex flex-col gap-y-6">
+              <div>So san pham da ban: {shopInfo?.numberOfSold}</div>
+              <div>Tong so don hang: {shopInfo?.numberOfOrder}</div>
+              <div>
+                Ti le don hang thanh cong:{" "}
+                {(
+                  (shopInfo?.numberOfSuccesOrder / shopInfo?.numberOfOrder) *
+                  100
+                ).toFixed(2)}
+                %
+              </div>
+            </div>
+          </div>
+        </div>
         <div className="w-2/3">
-          <div className="grid grid-cols-3 grid-rows-2 mt-[100px] gap-x-2 gap-y-2"></div>
-          <div className="grid grid-cols-6 mt-12">
+          <div className="grid grid-cols-6 ">
             <div className="flex flex-col col-span-1 border-r-2 border-gray-200">
               <div className="text-xl font-medium">
                 <FilterAltOutlinedIcon className="mr-2" /> Bộ lọc tìm kiếm
@@ -229,7 +322,8 @@ export default function Home() {
               </div>
             </div>
             <div className="pl-4 col-span-5">
-              <div>Kêt quả tìm kiếm cho từ khóa {keyWord}</div>
+              {keyWord && <div>Kêt quả tìm kiếm cho từ khóa {keyWord}</div>}
+              {!keyWord && <div>Danh sach san pham cua shop</div>}
 
               {listProduct?.length > 0 && (
                 <div className="grid md:grid-cols-5 grid-cols-3 gap-x-4 mt-4">
