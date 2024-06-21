@@ -270,8 +270,7 @@ export default function Page() {
               </div>
               <div
                 onClick={() => {
-                  console.log(listNote);
-                  console.log(paymentMethod);
+
                   state?.forEach(async (item: any) => {
                     const shop = item?.shop;
                     const products = item?.items;
@@ -297,6 +296,7 @@ export default function Page() {
                         fromProvince: `${shop.pickUpProvinceName}-${shop.pickUpProvinceId}`,
                         toProvince: `${selectedLocation?.provinceName}-${selectedLocation?.provinceId}`,
                         priceOfAll: total?.totalMoney,
+                        totalFee: total?.totalShipping,
                         paymentMethod: paymentMethod,
                         note: listNote?.[shop.id] || "no note",
                         requiredNote: "CHOTHUHANG",

@@ -121,8 +121,8 @@ export default function Header() {
       const res: any = await axios
         .get(`notifications`, {
           params: {
-            order: "createdAt DESC",
             filter: {
+              order: "createdAt DESC",
               limit: 5,
               where: {
                 idOfUser: user?.id,
@@ -171,103 +171,134 @@ export default function Header() {
                   </div>
                 </HoverCardTrigger>
                 <HoverCardContent className="w-fit">
-                  <div>
-                    {listNoti &&
-                      listNoti?.map((item: any) => {
-                        return (
-                          <div
-                            onClick={() => {
-                              if (!item?.idOfOrder.includes("VNP")) {
-                                router.push(
-                                  `/user/purchase/order/${item?.idOfOrder}`
-                                );
-                              } else {
-                                router.push(
-                                  `/user/wallet/rechargesuccess?${
-                                    item?.idOfOrder.split("-")[1]
-                                  }`
-                                );
-                              }
-                            }}
-                            key={item?.id}
-                            className="px-4 py-4 border-b-[1px] border-gray-200 hover:cursor-pointer w-[500px] hover:bg-gray-100 flex flex-row justify-between"
-                          >
-                            <div className="flex flex-row gap-x-4 ">
-                              <img
-                                src={
-                                  item?.image?.url ||
-                                  "https://nld.mediacdn.vn/291774122806476800/2022/12/28/avatar-the-way-of-water-1670943667-1672220380184583234571.jpeg"
-                                }
-                                alt="img"
-                                className="w-20 h-20"
-                              />
-                              <div className="flex flex-col">
-                                <div className="">{item?.title}</div>
-                                <div className="text-sm font-light mt-2">
-                                  {formatString(item?.content, 150)}
-                                </div>
-                                <div className="text-sm font-light mt-1">
-                                  {formatDate(item?.createdAt)}
+                  {isAuthenticated ? (
+                    <>
+                      <div>
+                        {listNoti &&
+                          listNoti?.map((item: any) => {
+                            return (
+                              <div
+                                onClick={() => {
+                                  if (!item?.idOfOrder.includes("VNP")) {
+                                    router.push(
+                                      `/user/purchase/order/${item?.idOfOrder}`
+                                    );
+                                  } else {
+                                    router.push(
+                                      `/user/wallet/rechargesuccess?${
+                                        item?.idOfOrder.split("-")[1]
+                                      }`
+                                    );
+                                  }
+                                }}
+                                key={item?.id}
+                                className="px-4 py-4 border-b-[1px] border-gray-200 hover:cursor-pointer w-[500px] hover:bg-gray-100 flex flex-row justify-between"
+                              >
+                                <div className="flex flex-row gap-x-4 ">
+                                  <img
+                                    src={
+                                      item?.image?.url ||
+                                      "https://nld.mediacdn.vn/291774122806476800/2022/12/28/avatar-the-way-of-water-1670943667-1672220380184583234571.jpeg"
+                                    }
+                                    alt="img"
+                                    className="w-20 h-20"
+                                  />
+                                  <div className="flex flex-col">
+                                    <div className="">{item?.title}</div>
+                                    <div className="text-sm font-light mt-2">
+                                      {formatString(item?.content, 150)}
+                                    </div>
+                                    <div className="text-sm font-light mt-1">
+                                      {formatDate(item?.createdAt)}
+                                    </div>
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                          </div>
-                        );
-                      })}
-                  </div>
-                  <div
-                    className="w-full flex justify-center items-center py-2 hover:cursor-grab hover:bg-gray-100"
-                    onClick={() => {
-                      router.push(`user/notification/order`);
-                    }}
-                  >
-                    Xem chi tiet{" "}
-                  </div>
+                            );
+                          })}
+                      </div>
+                      <div
+                        className="w-full flex justify-center items-center py-2 hover:cursor-grab hover:bg-gray-100"
+                        onClick={() => {
+                          router.push(`user/notification/order`);
+                        }}
+                      >
+                        Xem chi tiet{" "}
+                      </div>
+                    </>
+                  ) : (
+                    <div>Dang nhap de xem thong bao</div>
+                  )}
                 </HoverCardContent>
               </HoverCard>
 
-              <HoverCard>
-                <HoverCardTrigger>
-                  <div className="flex flex-row gap-x-2 justify-center items-center mr-4 hover:cursor-grab">
-                    <Avatar className="w-6 h-6">
-                      <AvatarImage src={user?.avatar?.url} />
-                      <AvatarFallback>CN</AvatarFallback>
-                    </Avatar>
-                    <div className="text-sm">{user?.fullName || user?.id}</div>
+              {!isAuthenticated && (
+                <div className="flex flex-row gap-x-2 text-sm">
+                  <div
+                    className="px-2 border-r-[1px] border-gray-300 hover:underline hover:cursor-grab"
+                    onClick={() => {
+                      router.push("/Login");
+                    }}
+                  >
+                    Dang nhap
                   </div>
-                </HoverCardTrigger>
-                <HoverCardContent className="w-fit">
-                  <div className="flex flex-col">
-                    <div
-                      className="py-2 px-4 hover:cursor-grab hover:bg-gray-200 border-b-[1px] border-gray-200"
-                      onClick={() => {
-                        router.push("user/account/profile");
-                      }}
-                    >
-                      Thong tin tai khoan
-                    </div>
-                    <div
-                      className="py-2 px-4 hover:cursor-grab hover:bg-gray-200 border-b-[1px] border-gray-200"
-                      onClick={() => {
-                        router.push("user/purchase");
-                      }}
-                    >
-                      Don mua online
-                    </div>
-                    <div
-                      className="py-2 px-4 hover:cursor-grab hover:bg-gray-200 border-b-[1px] border-gray-200"
-                      onClick={() => {
-                        localStorage.removeItem("user");
-                        localStorage.removeItem("token");
-                        logout();
-                        router.push("/");
-                      }}
-                    >
-                      Dang xuat
-                    </div>
+                  <div
+                    className="hover:underline hover:cursor-grab"
+                    onClick={() => {
+                      router.push("/Register");
+                    }}
+                  >
+                    Dang ky
                   </div>
-                </HoverCardContent>
-              </HoverCard>
+                </div>
+              )}
+
+              {isAuthenticated && (
+                <HoverCard>
+                  <HoverCardTrigger>
+                    <div className="flex flex-row gap-x-2 justify-center items-center mr-4 hover:cursor-grab">
+                      <Avatar className="w-6 h-6">
+                        <AvatarImage src={user?.avatar?.url} />
+                        <AvatarFallback>CN</AvatarFallback>
+                      </Avatar>
+                      <div className="text-sm">
+                        {user?.fullName || user?.id}
+                      </div>
+                    </div>
+                  </HoverCardTrigger>
+                  <HoverCardContent className="w-fit">
+                    <div className="flex flex-col">
+                      <div
+                        className="py-2 px-4 hover:cursor-grab hover:bg-gray-200 border-b-[1px] border-gray-200"
+                        onClick={() => {
+                          router.push("user/account/profile");
+                        }}
+                      >
+                        Thong tin tai khoan
+                      </div>
+                      <div
+                        className="py-2 px-4 hover:cursor-grab hover:bg-gray-200 border-b-[1px] border-gray-200"
+                        onClick={() => {
+                          router.push("user/purchase");
+                        }}
+                      >
+                        Don mua online
+                      </div>
+                      <div
+                        className="py-2 px-4 hover:cursor-grab hover:bg-gray-200 border-b-[1px] border-gray-200"
+                        onClick={() => {
+                          localStorage.removeItem("user");
+                          localStorage.removeItem("token");
+                          logout();
+                          router.push("/");
+                        }}
+                      >
+                        Dang xuat
+                      </div>
+                    </div>
+                  </HoverCardContent>
+                </HoverCard>
+              )}
             </div>
           </div>
           <div className="flex justify-between items-center py-6 md:py-2 md:justify-start">

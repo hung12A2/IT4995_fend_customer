@@ -28,7 +28,6 @@ export default function Page() {
   let state: any = searchParams.get("state");
   state = state ? JSON.parse(state) : null;
 
-
   useEffect(() => {
     async function fetchData() {
       const dataLocation: any = await axios
@@ -57,7 +56,7 @@ export default function Page() {
         console.log(state);
         let lct = selectedLocation;
         await Promise.all(
-          state?.forEach(async (item: any) => {
+          state?.map(async (item: any) => {
             let kiotData = item?.kiot;
             let products = item?.items;
             let listProducts = products.map((product: any) => {
@@ -304,7 +303,7 @@ export default function Page() {
                       };
                     });
 
-                    const dataReturn:any = await axios
+                    const dataReturn: any = await axios
                       .post(
                         `order-kiot/create/shop/${user?.idOfShop}/kiot/${kiot?.id}`,
                         {
@@ -325,6 +324,7 @@ export default function Page() {
                           note: listNote?.[kiot?.id] || "no note",
                           requiredNote: "CHOTHUHANG",
                           items: listIdProduct,
+                          totalFee: preview?.[kiot?.id],
                         }
                       )
                       .then((res) => res)

@@ -10,11 +10,12 @@ import Footer from "@/module/Footer";
 import { getDistance } from "@/utils/getDistance";
 import LocationCard from "@/module/base/locationCard";
 import Chat from "@/module/chat/chat";
-
+import { useAuthContext } from "@/provider/auth.provider";
 
 export default function Home() {
   const route = useRouter();
   const params = useParams();
+  const { isAuthenticated } = useAuthContext();
   const [listCategory, setListCategory] = useState([]);
   const [listProduct, setListProduct] = useState([]);
   const [location, setLocation] = useState<any>();
@@ -44,91 +45,98 @@ export default function Home() {
         .then((res) => res)
         .catch((e) => console.log(e));
 
-      const dataLocation: any = await axios
-        .get(`location-users`, {
-          params: {
-            filter: {
-              isDefaultKiot: true,
-            },
-          },
-        })
-        .then((res) => res)
-        .catch((e) => console.log(e));
-
-      let dataKiotNear: any = await axios.get(`kiots`, {
-        params: {
-          filter: {
-            where: {
-              pickUpGeometry: {
-                near: dataLocation[0]?.geometry,
-                maxDistance: 10,
-                unit: "kilometers",
-              },
-            },
-          },
-        },
-      });
-
-      const listIdKiot = dataKiotNear.map((kiot: any) => kiot.id);
-
-      let listDistance: any = [];
-
-      listDistance = await Promise.all(
-        dataKiotNear.map(async (kiot: any) => {
-          const to = `${dataLocation[0].geometry.lat},${dataLocation[0].geometry.lng}`;
-          const from = `${kiot.pickUpGeometry.lat},${kiot.pickUpGeometry.lng}`;
-          const distanceData = await getDistance(from, to);
-          const distance =
-            +distanceData.rows[0].elements[0].distance.text.split(" ")[0];
-
-          const estimateTime =
-            +distanceData.rows[0].elements[0].duration.text.split(" ")[0];
-          return {
-            distance,
-            estimateTime,
-            kiotId: kiot.id,
-          };
-        })
-      );
-
-      
-      let dataProductKiot: any = [];
-
-      if (dataKiotNear.length > 0) {
-        dataProductKiot = await axios.get(`products`, {
-          params: {
-            filter: {
-              where: {
-                isKiotProduct: true,
-                idOfKiot: {
-                  inq: listIdKiot,
-                },
-              },
-            },
-          },
-        });
-
-        dataProductKiot = dataProductKiot.map((product: any) => {
-          const kiot = listDistance.find(
-            (kiot: any) => kiot.kiotId === product.idOfKiot
-          );
-          return {
-            ...product,
-            distance: kiot?.distance,
-            estimateTime: kiot?.estimateTime,
-          };
-        });
-      }
-
-      setListProductKiot(dataProductKiot);
-      setListKiot(dataKiotNear);
-      setLocation(dataLocation);
       setListProduct(dataProducts);
     }
 
     fetchData();
   }, []);
 
+  useEffect(() => {
+    async function fetchData() {
+      if (isAuthenticated) {
+        const dataLocation: any = await axios
+          .get(`location-users`, {
+            params: {
+              filter: {
+                isDefaultKiot: true,
+              },
+            },
+          })
+          .then((res) => res)
+          .catch((e) => console.log(e));
+
+        let dataKiotNear: any = await axios.get(`kiots`, {
+          params: {
+            filter: {
+              where: {
+                pickUpGeometry: {
+                  near: dataLocation[0]?.geometry,
+                  maxDistance: 10,
+                  unit: "kilometers",
+                },
+              },
+            },
+          },
+        });
+
+        const listIdKiot = dataKiotNear.map((kiot: any) => kiot.id);
+
+        let listDistance: any = [];
+
+        listDistance = await Promise.all(
+          dataKiotNear.map(async (kiot: any) => {
+            const to = `${dataLocation[0].geometry.lat},${dataLocation[0].geometry.lng}`;
+            const from = `${kiot.pickUpGeometry.lat},${kiot.pickUpGeometry.lng}`;
+            const distanceData = await getDistance(from, to);
+            const distance =
+              +distanceData.rows[0].elements[0].distance.text.split(" ")[0];
+
+            const estimateTime =
+              +distanceData.rows[0].elements[0].duration.text.split(" ")[0];
+            return {
+              distance,
+              estimateTime,
+              kiotId: kiot.id,
+            };
+          })
+        );
+
+        let dataProductKiot: any = [];
+
+        if (dataKiotNear.length > 0) {
+          dataProductKiot = await axios.get(`products`, {
+            params: {
+              filter: {
+                where: {
+                  isKiotProduct: true,
+                  idOfKiot: {
+                    inq: listIdKiot,
+                  },
+                },
+              },
+            },
+          });
+
+          dataProductKiot = dataProductKiot.map((product: any) => {
+            const kiot = listDistance.find(
+              (kiot: any) => kiot.kiotId === product.idOfKiot
+            );
+            return {
+              ...product,
+              distance: kiot?.distance,
+              estimateTime: kiot?.estimateTime,
+            };
+          });
+        }
+
+        setListProductKiot(dataProductKiot);
+        setListKiot(dataKiotNear);
+        setLocation(dataLocation);
+      }
+    }
+
+    fetchData();
+  }, [isAuthenticated]);
 
   return (
     <>
@@ -159,20 +167,25 @@ export default function Home() {
           <div className="shadow-lg border-gray-200 bg-white px-4 py-4">
             <h1 className="text-xl mt-6 text-gray-700">Danh muc</h1>
             <div className="grid grid-cols-10 pb-4 mt-10 gap-x-3 gap-y-2">
-              {listCategory && (listCategory || [])?.map((cate: any) => (
-                <div
-                  onClick={() => route.push(`/search?category=${JSON.stringify([cate.id])}`)}
-                  key={cate.id}
-                  className="flex flex-col items-center justify-center hover:cursor-grab p-2"
-                >
-                  <img
-                    src={cate.image.url}
-                    className="aspect-square rounded-lg hover:brightness-105 w-full "
-                    alt={cate.cateName}
-                  />
-                  <span className="mt-3">{cate.cateName}</span>
-                </div>
-              ))}
+              {listCategory &&
+                (listCategory || [])?.map((cate: any) => (
+                  <div
+                    onClick={() =>
+                      route.push(
+                        `/search?category=${JSON.stringify([cate.id])}`
+                      )
+                    }
+                    key={cate.id}
+                    className="flex flex-col items-center justify-center hover:cursor-grab p-2"
+                  >
+                    <img
+                      src={cate.image.url}
+                      className="aspect-square rounded-lg hover:brightness-105 w-full "
+                      alt={cate.cateName}
+                    />
+                    <span className="mt-3">{cate.cateName}</span>
+                  </div>
+                ))}
             </div>
           </div>
 
@@ -191,38 +204,40 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="border-gray-200  px-4 py-4 mt-6">
-            <div className="flex flex-col justify-center items-center bg-white">
-              <h1 className="text-xl mt-2 text-green-700 mt-4">
-                Cac san pham o gan ban
-              </h1>
-              <div className="border-2 border-green-300 w-full"></div>
-            </div>
+          {isAuthenticated && (
+            <div className="border-gray-200  px-4 py-4 mt-6">
+              <div className="flex flex-col justify-center items-center bg-white">
+                <h1 className="text-xl mt-2 text-green-700 mt-4">
+                  Cac san pham o gan ban
+                </h1>
+                <div className="border-2 border-green-300 w-full"></div>
+              </div>
 
-            <div className="flex flex-row gap-x-10 mt-4">
-              <LocationCard
-                location={location}
-                setLocation={(newLocation: any) => {
-                  setLocation(newLocation);
-                }}
-              />
-              <div className="border-[1px] px-2 py-1 rounded-sm border-green-600 hover:cursor-grab">
-                10km
+              <div className="flex flex-row gap-x-10 mt-4">
+                <LocationCard
+                  location={location}
+                  setLocation={(newLocation: any) => {
+                    setLocation(newLocation);
+                  }}
+                />
+                <div className="border-[1px] px-2 py-1 rounded-sm border-green-600 hover:cursor-grab">
+                  10km
+                </div>
               </div>
-            </div>
 
-            {listProductKiot?.length > 0 ? (
-              <div className="grid grid-cols-6 pb-4 mt-10 gap-x-4 gap-y-2">
-                {listProductKiot?.map((product: any) => {
-                  return <ItemCard product={product} key={product.id} />;
-                })}
-              </div>
-            ) : (
-              <div className="mt-8 text-xl font-medium flex justify-center items-center">
-                Khong co san pham nao gan ban
-              </div>
-            )}
-          </div>
+              {listProductKiot?.length > 0 ? (
+                <div className="grid grid-cols-6 pb-4 mt-10 gap-x-4 gap-y-2">
+                  {listProductKiot?.map((product: any) => {
+                    return <ItemCard product={product} key={product.id} />;
+                  })}
+                </div>
+              ) : (
+                <div className="mt-8 text-xl font-medium flex justify-center items-center">
+                  Khong co san pham nao gan ban
+                </div>
+              )}
+            </div>
+          )}
         </div>
         <div className="w-full">
           <Footer />

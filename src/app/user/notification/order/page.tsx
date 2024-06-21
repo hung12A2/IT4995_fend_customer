@@ -44,8 +44,8 @@ export default function Page() {
       const res: any = await axios
         .get(`notifications`, {
           params: {
-            order: "createdAt DESC",
             filter: {
+              order: "createdAt DESC",
               where: {
                 idOfUser: user?.id,
               },

@@ -80,7 +80,7 @@ const Login = () => {
             <a
               className="no-underline border-b border-grey-dark text-md text-grey-dark text-blue-700 font-semibold hover:cursor-grab"
               onClick={() => {
-                router.push("/forgotPassowrd");
+                router.push("/forgotPassword");
               }}
             >
               Or Reset Password Here
