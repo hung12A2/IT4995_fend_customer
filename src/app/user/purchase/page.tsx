@@ -37,7 +37,14 @@ export default function Page() {
   useEffect(() => {
     async function fetchData() {
       let dataReturn: any = await axios
-        .get(`orders`)
+        .get(`orders`, {
+          params: {
+            filter: {
+             order: 'createdAt DESC',
+            },
+          },
+        
+        })
         .then((res) => res)
         .catch((e) => console.log(e));
 

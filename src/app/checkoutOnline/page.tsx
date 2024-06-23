@@ -3,7 +3,7 @@
 import Header from "@/module/Header";
 import { useCartContext } from "@/provider/cart.provider";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import axios from "../../module/AxiosCustom/custome_Axios";
 import LocationCardCheckOut from "@/module/base/locationCardCheckout";
 import StoreIcon from "@mui/icons-material/Store";
@@ -14,6 +14,14 @@ import { useAuthContext } from "@/provider/auth.provider";
 import { toast } from "@/components/ui/use-toast";
 
 export default function Page() {
+  return (
+    <Suspense>
+      <Page2 />
+    </Suspense>
+  )
+}
+
+function Page2() {
   const cartContext = useCartContext();
   const [location, setLocation] = useState<any>();
   const [total, setTotal] = useState<any>({});
@@ -54,7 +62,7 @@ export default function Page() {
       if (state && selectedLocation) {
         let lct = selectedLocation;
         await Promise.all(
-          state?.forEach(async (item: any) => {
+          state?.map(async (item: any) => {
             let shopData = item.shop;
             let products = item.items;
             let listProducts = products.map((product: any) => {

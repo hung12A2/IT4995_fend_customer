@@ -7,7 +7,7 @@ import Slider from "@/module/base/slider";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import axios from "../../../module/AxiosCustom/custome_Axios";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -24,7 +24,15 @@ import { useChatContext } from "@/provider/chat.provider";
 import { useAuthContext } from "@/provider/auth.provider";
 import { socket } from "@/module/socket/socket";
 
-export default function Home() {
+export default function Page() {
+  return (
+    <Suspense>
+      <Page2 />
+    </Suspense>
+  );
+}
+
+function Page2() {
   const params = useParams();
   const searchParams = useSearchParams();
   const idOfShop = params.idOfShop;

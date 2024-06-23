@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 /* This example requires Tailwind CSS v2.0+ */
-import { Fragment, useContext, useState, useEffect } from "react";
+import { Fragment, useContext, useState, useEffect, Suspense } from "react";
 import {
   Popover,
   Transition,
@@ -86,6 +86,14 @@ function formatString(str: string, length: number) {
 }
 
 export default function Header() {
+  return (
+    <Suspense>
+      <Header2 />
+    </Suspense>
+  );
+}
+
+function Header2() {
   const authenContext = useAuthContext();
   const { user, isAuthenticated, logout } = authenContext;
   const { totalKiot, totalOnline } = useCartContext();
@@ -220,7 +228,7 @@ export default function Header() {
                       <div
                         className="w-full flex justify-center items-center py-2 hover:cursor-grab hover:bg-gray-100"
                         onClick={() => {
-                          router.push(`user/notification/order`);
+                          router.push(`/user/notification/order`);
                         }}
                       >
                         Xem chi tiet{" "}

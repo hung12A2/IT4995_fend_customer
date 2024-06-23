@@ -9,7 +9,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import Person2Icon from "@mui/icons-material/Person2";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import axios from '../../../../module/AxiosCustom/custome_Axios'
@@ -25,6 +25,14 @@ function formatDate(dateStr: string) {
 }
 
 export default function Page() {
+  return (
+    <Suspense>
+      <Page2 />
+    </Suspense>
+  );
+}
+
+function Page2() {
   const { user } = useAuthContext();
   const searchParams = useSearchParams();
 
@@ -41,7 +49,7 @@ export default function Page() {
       const data = await axios.post(`wallet-of-user/update`, {
         type: 'charge',
         amountMoney: vnPayAmount,
-        vnpayCode: `${vnPayBankTranNo}-${window.location.href.split('?')[1]}`
+        vnpayCode: `${vnPayBankTranNo}-${window?.location.href.split('?')[1]}`
       })
 
       console.log(data)
