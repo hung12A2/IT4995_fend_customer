@@ -51,7 +51,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     async function fetchData() {
-      let token: any = window?.localStorage.getItem("token");
+      let token: any = ''
+      if (typeof window !== "undefined") {
+        token = localStorage.getItem("token");
+      }
       token = JSON.parse(token);
       token = token?.token;
       if (token) {

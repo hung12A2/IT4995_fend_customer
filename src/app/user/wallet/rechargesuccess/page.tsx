@@ -12,7 +12,7 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import { Suspense, useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import axios from '../../../../module/AxiosCustom/custome_Axios'
+import axios from "../../../../module/AxiosCustom/custome_Axios";
 import NavUser from "@/module/base/navUser";
 
 function formatDate(dateStr: string) {
@@ -36,8 +36,8 @@ function Page2() {
   const { user } = useAuthContext();
   const searchParams = useSearchParams();
 
-  let vnPayAmount:any = searchParams.get("vnp_Amount") ;
-  vnPayAmount = vnPayAmount ? +vnPayAmount/100 : 0;
+  let vnPayAmount: any = searchParams.get("vnp_Amount");
+  vnPayAmount = vnPayAmount ? +vnPayAmount / 100 : 0;
   const vnPayBankCode = searchParams.get("vnp_BankCode");
   const vnPayBankTranNo = searchParams.get("vnp_BankTranNo");
   const vnPayCardType = searchParams.get("vnp_CardType");
@@ -46,13 +46,16 @@ function Page2() {
 
   useEffect(() => {
     async function fetchWallet() {
-      const data = await axios.post(`wallet-of-user/update`, {
-        type: 'charge',
-        amountMoney: vnPayAmount,
-        vnpayCode: `${vnPayBankTranNo}-${window?.location.href.split('?')[1]}`
-      })
+      if (typeof window !== undefined) {
+        const data = await axios.post(`wallet-of-user/update`, {
+          type: "charge",
+          amountMoney: vnPayAmount,
+          vnpayCode: `${vnPayBankTranNo}-${
+            window?.location.href.split("?")[1]
+          }`,
+        });
+      }
 
-      console.log(data)
     }
 
     fetchWallet();
@@ -64,7 +67,7 @@ function Page2() {
     <div className="bg-gray-100 flex flex-col justify-center items-center">
       <Header />
       <div className="mt-[150px] w-2/3 flex flex-row">
-          <NavUser/>
+        <NavUser />
         <div className="flex flex-col w-full bg-white">
           <div className="px-6 py-4 flex flex-col gap-y-2 border-b-[1px] border-gray-300">
             <div className="text-lg">Thong tin thanh toan </div>
