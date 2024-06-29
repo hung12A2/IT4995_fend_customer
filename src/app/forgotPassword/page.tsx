@@ -14,6 +14,9 @@ const Forgetpass = () => {
 
   const { handleSubmit } = formContext;
 
+  console.log (window?.location?.origin)
+
+
   const onSubmit = async (data: any) => {
     const { email } = data;
     const dataFetch = await axios

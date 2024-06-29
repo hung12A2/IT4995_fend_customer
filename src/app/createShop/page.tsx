@@ -355,127 +355,143 @@ export default function Page() {
           <div className="px-32 py-6 border-b-[1px] border-gray-300">
             Thong tin shop
           </div>
-          <div className="px-32 py-16 border-b-[1px] border-gray-300">
-            <div className="mb-4">
-              <TextField
-                name="name"
-                label="Name"
-                placeholder="name"
-                required={true}
-              />
+          {user?.idOfShop && (
+            <div className="h-[80vh] flex flex-col justify-center w-full items-center text-center	">
+              <div className="w-fit px-64">
+                Ban da co shop, dang nhap vao trang{" "}
+                <a href="https://it4995-stores2-node20.azurewebsites.net/" className="font-medium text-md text-green-600">
+                  https://it4995-stores2-node20.azurewebsites.net/
+                </a>
+                de quan ly shop cua minh nhes
+              </div>
             </div>
-            <div className="mb-4">
-              <TextField
-                name="pickUpAddress"
-                label="Pick up address"
-                placeholder="Pick up address"
-                required={true}
-              />
-            </div>
-            <div className="mb-4">
-              <TextField
-                name="returnAddress"
-                label="Return address"
-                placeholder="Return address"
-                required={true}
-              />
-            </div>
-            <div>
-              <SelectField
-                setSelected={(value: any) => {
-                  setSelectedProvince(value);
-                }}
-                name="pickUpProvince"
-                label="pickUpProvince"
-                options={listProvince}
-              />
-            </div>
-            <div>
-              <SelectField
-                setSelected={(value: any) => {
-                  setSelectedProvince2(value);
-                }}
-                name="returnProvince"
-                label="returnProvince"
-                options={listProvince}
-              />
-            </div>
-            <div>
-              <SelectField
-                setSelected={(value: any) => {
-                  setSelectedDistrict(value);
-                }}
-                name="pickUpDistrict"
-                label="pickUpDistrict"
-                options={listDistrict}
-              />
-            </div>
-            <div>
-              <SelectField
-                setSelected={(value: any) => {
-                  setSelectedDistrict2(value);
-                }}
-                name="returnDistrict"
-                label="returnDistrict"
-                options={listDistrict2}
-              />
-            </div>
-            <div>
-              <SelectField
-                name="pickUpWard"
-                label="pickUpWard"
-                options={listWard}
-              />
-            </div>
-            <div>
-              <SelectField
-                name="returnWard"
-                label="returnWard"
-                options={listWard2}
-              />
-            </div>
-            <div className="mb-4">
-              <EmailField
-                name="email"
-                label="Email"
-                placeholder="email"
-                required={true}
-              />
-            </div>
-            <div className="mb-4">
-              <TextField
-                name="phoneNumber"
-                label="Phone Number"
-                placeholder="Phone Number"
-                required={true}
-              />
-            </div>
-            <div className="mb-4">
-              <ImgFieldMulti
-                name="IDcardImg"
-                label="IDcardImg"
-                required={true}
-              />
-            </div>
-            <div className="mb-4">
-              <ImgFieldMulti
-                name="BLicenseImg"
-                label="BLicenseImg"
-                required={true}
-              />
-            </div>
-          </div>
-          <div className="py-4 px-32 flex flex-row justify-end gap-x-4">
-            <div className="px-4 py-1 border-[1px] border-gray-300 hover:cursor-grab shadow-sm hover:bg-gray-100">
-              Luu
-            </div>
-            <div
-              className="px-4 py-1 text-white bg-green-600 hover:cursor-grab hover:bg-green-700"
-              onClick={handleSubmit(onSubmit)}
-            >
-              Tiep theo
-            </div>
-          </div>
+          )}
+
+          {!user?.idOfShop && (
+            <>
+              <div className="px-32 py-16 border-b-[1px] border-gray-300">
+                <div className="mb-4">
+                  <TextField
+                    name="name"
+                    label="Name"
+                    placeholder="name"
+                    required={true}
+                  />
+                </div>
+                <div className="mb-4">
+                  <TextField
+                    name="pickUpAddress"
+                    label="Pick up address"
+                    placeholder="Pick up address"
+                    required={true}
+                  />
+                </div>
+                <div className="mb-4">
+                  <TextField
+                    name="returnAddress"
+                    label="Return address"
+                    placeholder="Return address"
+                    required={true}
+                  />
+                </div>
+                <div>
+                  <SelectField
+                    setSelected={(value: any) => {
+                      setSelectedProvince(value);
+                    }}
+                    name="pickUpProvince"
+                    label="pickUpProvince"
+                    options={listProvince}
+                  />
+                </div>
+                <div>
+                  <SelectField
+                    setSelected={(value: any) => {
+                      setSelectedProvince2(value);
+                    }}
+                    name="returnProvince"
+                    label="returnProvince"
+                    options={listProvince}
+                  />
+                </div>
+                <div>
+                  <SelectField
+                    setSelected={(value: any) => {
+                      setSelectedDistrict(value);
+                    }}
+                    name="pickUpDistrict"
+                    label="pickUpDistrict"
+                    options={listDistrict}
+                  />
+                </div>
+                <div>
+                  <SelectField
+                    setSelected={(value: any) => {
+                      setSelectedDistrict2(value);
+                    }}
+                    name="returnDistrict"
+                    label="returnDistrict"
+                    options={listDistrict2}
+                  />
+                </div>
+                <div>
+                  <SelectField
+                    name="pickUpWard"
+                    label="pickUpWard"
+                    options={listWard}
+                  />
+                </div>
+                <div>
+                  <SelectField
+                    name="returnWard"
+                    label="returnWard"
+                    options={listWard2}
+                  />
+                </div>
+                <div className="mb-4">
+                  <EmailField
+                    name="email"
+                    label="Email"
+                    placeholder="email"
+                    required={true}
+                  />
+                </div>
+                <div className="mb-4">
+                  <TextField
+                    name="phoneNumber"
+                    label="Phone Number"
+                    placeholder="Phone Number"
+                    required={true}
+                  />
+                </div>
+                <div className="mb-4">
+                  <ImgFieldMulti
+                    name="IDcardImg"
+                    label="IDcardImg"
+                    required={true}
+                  />
+                </div>
+                <div className="mb-4">
+                  <ImgFieldMulti
+                    name="BLicenseImg"
+                    label="BLicenseImg"
+                    required={true}
+                  />
+                </div>
+              </div>
+              <div className="py-4 px-32 flex flex-row justify-end gap-x-4">
+                <div className="px-4 py-1 border-[1px] border-gray-300 hover:cursor-grab shadow-sm hover:bg-gray-100">
+                  Luu
+                </div>
+                <div
+                  className="px-4 py-1 text-white bg-green-600 hover:cursor-grab hover:bg-green-700"
+                  onClick={handleSubmit(onSubmit)}
+                >
+                  Tiep theo
+                </div>
+              </div>
+            </>
+          )}
         </div>
       </FormProvider>
     </div>

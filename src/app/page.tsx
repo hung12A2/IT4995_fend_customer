@@ -22,6 +22,7 @@ export default function Home() {
   const [listProductKiot, setListProductKiot] = useState([]); // list product kiot
   const [listKiot, setListKiot] = useState([]);
 
+
   useEffect(() => {
     async function fetchData() {
       const response: any = await axios

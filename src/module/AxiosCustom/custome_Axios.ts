@@ -1,7 +1,7 @@
 import axios from "axios";
 
-// const BASE_URL = "http://localhost:5050";
-const BASE_URL = "https://it4995-bend-kr70.onrender.com/";
+const BASE_URL = "http://localhost:5050";
+// const BASE_URL = "https://it4995-bend-kr70.onrender.com/";
 
 const instance = axios.create({
   baseURL: `${BASE_URL}`,
