@@ -14,13 +14,11 @@ const Forgetpass = () => {
 
   const { handleSubmit } = formContext;
 
-  console.log (window?.location?.origin)
-
 
   const onSubmit = async (data: any) => {
     const { email } = data;
     const dataFetch = await axios
-      .post("/forgotPassword/customer", { email })
+      .post("/forgotPassword/customer", { email, host: window?.location?.origin })
       .then((res) => res.data)
       .catch((e) => console.log(e));
 

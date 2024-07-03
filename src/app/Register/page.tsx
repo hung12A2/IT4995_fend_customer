@@ -155,7 +155,9 @@ const Login = () => {
           <a
             className="no-underline border-b border-blue text-blue-500 font-semibold"
             href="#"
-            onClick={() => {}}
+            onClick={() => {
+              router.push("/Login");
+            }}
           >
             Log in
           </a>
