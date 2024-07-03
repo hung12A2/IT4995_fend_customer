@@ -6,17 +6,15 @@ import ListAltIcon from "@mui/icons-material/ListAlt";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
-import WalletIcon from '@mui/icons-material/Wallet';
+import WalletIcon from "@mui/icons-material/Wallet";
 
 export default function NavUser() {
   const { user } = useAuthContext();
 
   const router = useRouter();
-  let link: any = ''
-  if (
-    typeof window !== "undefined" 
-  ) {
-    link = window.location.pathname
+  let link: any = "";
+  if (typeof window !== "undefined") {
+    link = window.location.pathname;
   }
 
   return (
@@ -35,7 +33,7 @@ export default function NavUser() {
             }}
           >
             <EditIcon color="disabled" fontSize="small" />
-            <div className="text-gray-500 w-[92px]">Sua ho so</div>
+            <div className="text-gray-500 w-[92px]">Sửa hồ sơ</div>
           </div>
         </div>
       </div>
@@ -44,7 +42,7 @@ export default function NavUser() {
           <Person2Icon />{" "}
         </div>
         <div className="flex flex-col gap-y-4 py-1">
-          <div>Tai khoan cua toi</div>
+          <div>Tài khoản của tôi</div>
           <div className="ml-2 text-gray-600 gap-y-4 flex flex-col">
             <div
               className={cn(
@@ -55,7 +53,7 @@ export default function NavUser() {
                 router.push("/user/account/profile");
               }}
             >
-              Ho so
+              Hồ sơ
             </div>
             <div
               className={cn(
@@ -66,7 +64,7 @@ export default function NavUser() {
                 router.push("/user/account/address");
               }}
             >
-              Dia chi
+              Địa chỉ
             </div>
             <div
               className={cn(
@@ -77,7 +75,7 @@ export default function NavUser() {
                 router.push("/user/account/password");
               }}
             >
-              Doi mat khau
+              Đổi mật khẩu
             </div>
           </div>
         </div>
@@ -99,7 +97,7 @@ export default function NavUser() {
                   router.push("/user/purchase");
                 }}
               >
-                Don mua online
+               Đơn mua online
               </div>
               <div
                 className={cn(
@@ -110,7 +108,7 @@ export default function NavUser() {
                   router.push("/user/purchasekiot");
                 }}
               >
-                Don mua offline
+               Đơn mua offline
               </div>
             </div>
           </div>
@@ -122,7 +120,7 @@ export default function NavUser() {
         </div>
         <div className="text-gray-600 gap-y-4 flex flex-col">
           <div className={cn(`flex flex-col gap-y-4 py-1 `)}>
-            <div>Thong bao</div>
+            <div>Thông báo</div>
             <div className="ml-2 gap-y-4 flex flex-col">
               <div
                 className={cn(
@@ -133,9 +131,8 @@ export default function NavUser() {
                   router.push("/user/notification/order");
                 }}
               >
-                Don hang
+                Đơn hàng
               </div>
-
             </div>
           </div>
         </div>
@@ -157,7 +154,7 @@ export default function NavUser() {
                   router.push("/user/wallet/recharge");
                 }}
               >
-              Nap tien 
+                Ví tiền
               </div>
               <div
                 className={cn(
@@ -168,7 +165,7 @@ export default function NavUser() {
                   router.push("/user/wallet/transaction");
                 }}
               >
-                Danh sach giao dich
+                Danh sách giao dịch
               </div>
             </div>
           </div>

@@ -139,9 +139,9 @@ function Page2() {
                 <div className="p-6 bg-white shadow-lg my-8" key={index}>
                   {index == 0 && (
                     <div className="grid grid-cols-5 ">
-                      <div className="col-span-2 text-lg">San pham</div>
-                      <div className="col-span-1 text-gray-500">Don gia</div>
-                      <div className="col-span-1 text-gray-500">So luong</div>
+                      <div className="col-span-2 text-lg">Sản phẩm</div>
+                      <div className="col-span-1 text-gray-500">Đơn giá</div>
+                      <div className="col-span-1 text-gray-500">Số lượng</div>
                       <div className="col-span-1 text-gray-500">Thanh tien</div>
                     </div>
                   )}
@@ -213,7 +213,7 @@ function Page2() {
                   </div>
                   <div className="pt-4 border-gray-200 border-t-[1px] flex pr-[160px] justify-end">
                     <div>
-                      Tong so tien ({totalCount} san pham):{" "}
+                      Tong so tien ({totalCount} sản phẩm):{" "}
                       <span className="text-2xl ml-3 text-green-600">
                         {totalMoney}d
                       </span>
@@ -260,7 +260,7 @@ function Page2() {
               <div className="flex flex-col gap-y-4">
                 <div>Tong tien hang</div>
                 <div>Phi van chuyen</div>
-                <div>Tong thanh toan</div>
+                <div>Tổng thanh toán</div>
               </div>
               <div className="flex flex-col gap-y-4">
                 <div className="flex justify-end">

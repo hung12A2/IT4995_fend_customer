@@ -60,7 +60,7 @@ export default function Page() {
         <div className="flex flex-col w-full bg-white">
           <div className="px-6 py-4 flex flex-col gap-y-2 border-b-[1px] border-gray-300">
             <div className="text-lg">Lich su giao dich</div>
-            <div>Nap tien vao LunaShop thong qua VNPay</div>
+            <div>Nạp tiền vao LunaShop thong qua VNPay</div>
           </div>
           <div className="flex flex-col w-full">
             <div className="flex flex-row w-full bg-white ">

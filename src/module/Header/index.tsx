@@ -155,7 +155,7 @@ function Header2() {
               <div
                 className="hover:cursor-grab hover:text-gray-200 text-sm pr-2 border-r-[1px] border-gray-300"
                 onClick={() => {
-                  router.push(`createShop`);
+                  router.push(`/createShop`);
                 }}
               >
                 Kenh nguoi ban
@@ -175,7 +175,7 @@ function Header2() {
               <HoverCard>
                 <HoverCardTrigger>
                   <div className="text-sm mr-6 flex flex-row  items-center hover:cursor-grab">
-                    <NotificationsIcon /> Thong bao
+                    <NotificationsIcon /> Thông báo
                   </div>
                 </HoverCardTrigger>
                 <HoverCardContent className="w-fit">
@@ -290,7 +290,7 @@ function Header2() {
                           router.push("user/purchase");
                         }}
                       >
-                        Don mua online
+                       Đơn mua online
                       </div>
                       <div
                         className="py-2 px-4 hover:cursor-grab hover:bg-gray-200 border-b-[1px] border-gray-200"

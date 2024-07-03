@@ -22,7 +22,6 @@ export default function Home() {
   const [listProductKiot, setListProductKiot] = useState([]); // list product kiot
   const [listKiot, setListKiot] = useState([]);
 
-
   useEffect(() => {
     async function fetchData() {
       const response: any = await axios
@@ -166,7 +165,7 @@ export default function Home() {
           <div className="border-[1px] shadow-lg border-gray-200 mt-10"></div>
 
           <div className="shadow-lg border-gray-200 bg-white px-4 py-4">
-            <h1 className="text-xl mt-6 text-gray-700">Danh muc</h1>
+            <h1 className="text-xl mt-6 text-gray-700">Danh mục</h1>
             <div className="grid grid-cols-10 pb-4 mt-10 gap-x-3 gap-y-2">
               {listCategory &&
                 (listCategory || [])?.map((cate: any) => (
@@ -193,7 +192,7 @@ export default function Home() {
           <div className="border-gray-200  px-4 py-4 mt-6">
             <div className="flex flex-col justify-center items-center bg-white">
               <h1 className="text-xl mt-2 text-green-700 mt-4">
-                Top san pham ban chay
+                Top sản phẩm bán chạy
               </h1>
               <div className="border-2 border-green-300 w-full"></div>
             </div>
@@ -209,7 +208,7 @@ export default function Home() {
             <div className="border-gray-200  px-4 py-4 mt-6">
               <div className="flex flex-col justify-center items-center bg-white">
                 <h1 className="text-xl mt-2 text-green-700 mt-4">
-                  Cac san pham o gan ban
+                  Các sản phẩm ở gần bạn
                 </h1>
                 <div className="border-2 border-green-300 w-full"></div>
               </div>
@@ -234,7 +233,7 @@ export default function Home() {
                 </div>
               ) : (
                 <div className="mt-8 text-xl font-medium flex justify-center items-center">
-                  Khong co san pham nao gan ban
+                  Không có sản phẩm nào gần bạn
                 </div>
               )}
             </div>

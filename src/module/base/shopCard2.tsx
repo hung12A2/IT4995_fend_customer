@@ -48,17 +48,17 @@ export default function ShopCard2({
       <div className="pl-6 grid grid-cols-3 gap-x-12 grow">
         <div className="col-span-1 flex flex-col justify-center gap-y-4">
           <div className="flex flex-row justify-between items-center">
-            <div>Danh gia</div>
+            <div>Đánh giá</div>
             <div>{shopInfo?.numberOfRating}</div>
           </div>
           <div className="flex flex-row justify-between items-center">
-            <div>San pham</div>
+            <div>Sản phẩm</div>
             <div>{shopInfo?.numberOfProduct}</div>
           </div>
         </div>
         <div className="col-span-1 flex flex-col justify-center gap-y-4">
           <div className="flex flex-row justify-between items-center">
-            <div>Danh gia trung binh</div>
+            <div>Đánh giá trung binh</div>
             <div>{shopInfo?.avgRating}</div>
           </div>
           <div className="flex flex-row justify-between items-center">
@@ -68,7 +68,7 @@ export default function ShopCard2({
         </div>
         <div className="col-span-1 flex flex-col justify-center gap-y-4">
           <div className="flex flex-row justify-between items-center">
-            <div>Ti le Order thanh cong</div>
+            <div>Tỉ lệ Order thành công</div>
             <div>
               {(
                 (shopInfo?.numberOfSuccesOrder / shopInfo?.numberOfOrder) *

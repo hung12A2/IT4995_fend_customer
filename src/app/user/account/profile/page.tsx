@@ -109,11 +109,11 @@ export default function Page() {
 
                 if (res?.code == 200) {
                   toast({
-                    title: "Thay doi avt thanh cong",
+                    title: "Thay đổi avt thanh cong",
                   });
                 } else {
                   toast({
-                    title: "Thay doi avt that bai",
+                    title: "Thay đổi avt that bai",
                     description:
                       "Dung luong file toi da 1Mb, Dinh dang: JEPG, PNG",
                   });

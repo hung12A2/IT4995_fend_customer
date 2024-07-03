@@ -71,7 +71,7 @@ function Page2() {
         <div className="flex flex-col w-full bg-white">
           <div className="px-6 py-4 flex flex-col gap-y-2 border-b-[1px] border-gray-300">
             <div className="text-lg">Thong tin thanh toan </div>
-            <div>Nap tien vao LunaShop thong qua VNPay</div>
+            <div>Nạp tiền vao LunaShop thong qua VNPay</div>
           </div>
 
           <div className="flex justify-center py-8">
@@ -100,7 +100,7 @@ function Page2() {
                   </div>
                 </div>
                 <div className="flex flex-row justify-between py-4 border-b-[1px] border-gray-200">
-                  <div className="font-light">So tien (VND)</div>
+                  <div className="font-light">Số tiền (VND)</div>
                   <div className="font-semibold">{vnPayAmount}</div>
                 </div>
                 <div className="flex flex-row justify-between py-4 border-b-[1px] border-gray-200">

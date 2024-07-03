@@ -42,9 +42,9 @@ export default function TransactionCard({ transaction }: { transaction: any }) {
               `Thanh toan cho don hang ${transaction?.idOfOrder?.slice(0, 8)}`}
             {transaction?.type == "receive" &&
               `Hoan tra tu don hang ${transaction?.idOfOrder?.slice(0, 8)}`}
-            {transaction?.type == "charge" && `Nap tien VnPay`}
+            {transaction?.type == "charge" && `Nạp tiền VnPay`}
           </div>
-          <div className="text-sm">Nap tien thong qua VNpay</div>
+          <div className="text-sm">Nạp tiền thong qua VNpay</div>
         </div>
       </div>
       <div className="flex flex-col gap-y-2">

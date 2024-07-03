@@ -134,7 +134,7 @@ export default function LocationCard({
       label: updateLocation?.districtName,
     });
     setValueUpdate("ward", {
-      value: `${updateLocation?.wardName}-${updateLocation?.wardCode}`,
+      value: `${updateLocation?.wardName}-${updateLocation?.wardId}`,
       label: updateLocation?.wardName,
     });
     setValueUpdate("isDefaultKiot", updateLocation?.isDefaultKiot);
@@ -146,10 +146,18 @@ export default function LocationCard({
       <Dialog open={openAddForm} onOpenChange={setOpenAddForm}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Dia chi moi</DialogTitle>
+            <DialogTitle>Địa chỉ mới</DialogTitle>
           </DialogHeader>
 
           <FormProvider {...formContext}>
+            <div className="mb-4">
+              <TextField
+                name="name"
+                label="Name"
+                placeholder="Name"
+                required={true}
+              />
+            </div>
             <div className="mb-4">
               <TextField
                 name="address"
@@ -192,13 +200,13 @@ export default function LocationCard({
             <div>
               <CheckedField
                 name="isDefaultKiot"
-                label="Dia chi mac dinh giao hoa toc"
+                label="Địa chỉ mặc định giao hỏa tốc"
               />
             </div>
             <div>
               <CheckedField
                 name="isDefaultOnline"
-                label="Dia chi mac dinh giao online"
+                label="Địa chỉ mặc định giao online"
               />
             </div>
             <Button
@@ -240,10 +248,18 @@ export default function LocationCard({
       <Dialog open={openUpdateForm} onOpenChange={setOpenUpdateForm}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Cap nhap dia chi</DialogTitle>
+            <DialogTitle>Cập nhập địa chỉ</DialogTitle>
           </DialogHeader>
 
           <FormProvider {...formUpdateContext}>
+            <div className="mb-4">
+              <TextField
+                name="name"
+                label="Name"
+                placeholder="Name"
+                required={true}
+              />
+            </div>
             <div className="mb-4">
               <TextField
                 name="address"
@@ -286,13 +302,13 @@ export default function LocationCard({
             <div>
               <CheckedField
                 name="isDefaultKiot"
-                label="Dia chi mac dinh giao hoa toc"
+                label="Địa chỉ mặc định giao hỏa tốc"
               />
             </div>
             <div>
               <CheckedField
                 name="isDefaultOnline"
-                label="Dia chi mac dinh giao online"
+                label="Địa chỉ mặc định giao online"
               />
             </div>
             <Button
@@ -321,11 +337,11 @@ export default function LocationCard({
                     });
                   });
                   toast({
-                    title: "Cap nhap dia chi thanh cong",
+                    title: "Cập nhập địa chỉ thanh cong",
                   });
                 } else {
                   toast({
-                    title: "Cap nhap dia chi that bai",
+                    title: "Cập nhập địa chỉ that bai",
                   });
                 }
 
@@ -346,7 +362,7 @@ export default function LocationCard({
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Dia chi cua toi</DialogTitle>
+            <DialogTitle>Địa chỉ của tôi</DialogTitle>
           </DialogHeader>
 
           <DialogDescription>
@@ -385,12 +401,12 @@ export default function LocationCard({
                         </div>
                         {item?.isDefaultKiot && (
                           <div className="text-sm font-light mt-2 border-2 border-green-600 w-fit text-green-600 px-2 py-1 ">
-                            Dia chi mac dinh giao hoa toc
+                            Địa chỉ mặc định giao hỏa tốc
                           </div>
                         )}
                         {item?.isDefaultOnline && (
                           <div className="text-sm font-light mt-2 border-2 border-green-600 w-fit text-green-600 px-2 py-1 ">
-                            Dia chi mac dinh giao online
+                            Địa chỉ mặc định giao online
                           </div>
                         )}
                       </div>
@@ -403,7 +419,7 @@ export default function LocationCard({
                           setOpen(false);
                         }}
                       >
-                        Cap nhap
+                        Cập nhập
                       </div>
                     </div>
                   ))}
@@ -418,7 +434,7 @@ export default function LocationCard({
                 }}
               >
                 <AddIcon />
-                Them dia chi moi
+                Thêm địa chỉ mới
               </div>
             </ScrollArea>
           </DialogDescription>
@@ -429,7 +445,7 @@ export default function LocationCard({
                 setOpen(false);
               }}
             >
-              Huy
+              Hủy
             </Button>
             <Button
               onClick={() => {

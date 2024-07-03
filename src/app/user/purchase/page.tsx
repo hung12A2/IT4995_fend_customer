@@ -181,7 +181,7 @@ export default function Page() {
                 setSelectedPage(3);
               }}
             >
-              Hoan thanh
+              Hoàn thành
             </div>
             <div
               className={`w-1/5 flex justify-center items-center py-2 hover:cursor-grab${

@@ -39,23 +39,23 @@ function formatDate(date: string) {
 function translateStatus(status: string) {
   switch (status) {
     case "pending":
-      return "Don hang da duoc tao thanh cong";
+      return "Đơn hàng da duoc tao thanh cong";
     case "accepted":
       return "Da chap nhan don hang";
     case "prepared":
-      return "Don hang da duoc chuan bi xong";
+      return "Đơn hàng da duoc chuan bi xong";
     case "inTransist":
-      return "Don hang da duoc ban giao cho don vi van chuyen";
+      return "Đơn hàng da duoc ban giao cho don vi van chuyen";
     case "inTransist2":
-      return "Don hang dang tren duong giao den ban";
+      return "Đơn hàng dang tren duong giao den ban";
     case "delivered":
-      return "Don hang da duoc giao thanh cong";
+      return "Đơn hàng da duoc giao thanh cong";
     case "received":
-      return "Don hang da duoc nhan";
+      return "Đơn hàng da duoc nhan";
     case "returned":
-      return "Don hang da duoc tra";
+      return "Đơn hàng da duoc tra";
     case "rating":
-      return "Don hang da duoc danh gia";
+      return "Đơn hàng da duoc danh gia";
   }
 }
 
@@ -195,12 +195,12 @@ export default function Page() {
             </div>
             <div className="flex flex-row items-center">
               <div className="pr-4 text-sm border-r-[1px] border-gray-400">
-                MA DON HANG: {orderData?.id?.slice(1, 10).toUpperCase()}
+                MA ĐƠN HÀNG: {orderData?.id?.slice(1, 10).toUpperCase()}
               </div>
               <div className="pl-4 text-green-600 text-sm">
                 {(orderData?.status == "rating" ||
                   orderData?.status == "received") &&
-                  `DON HANG DA HOAN THANH`}{" "}
+                  `ĐƠN HÀNG DA HOÀN THÀNH`}{" "}
               </div>
             </div>
           </div>
@@ -298,7 +298,7 @@ export default function Page() {
                 )}
               </div>
             </div>
-            {/* Danh gia */}
+            {/* Đánh giá */}
             <div className="flex flex-col px-6 bg-green-50 border-b-2 border-green-500">
               <div className="flex justify-end py-4 border-b-[1px] border-gray-200">
                 <div className="w-[200px] flex hover:cursor-grab justify-center items-center bg-green-600 text-white py-2">
@@ -327,7 +327,7 @@ export default function Page() {
               )}
             </div>
 
-            {/* Dia chi nhan hang */}
+            {/*Địa chỉ nhận hàng */}
             <div className="px-6 py-4 flex flex-col">
               <div className="flex flex-row justify-between">
                 <div className="text-lg font-medium">Dia Chi Nhan Hang</div>
@@ -413,7 +413,7 @@ export default function Page() {
                               <div>{product?.name}</div>
                               <div>x{item?.quantity}</div>
                               <div className="text-sm text-green-600 border-green-600 border-[1px] px-1">
-                                Tra hang mien phi 15 ngay
+                              Trả hàng miễn phí 15 ngày
                               </div>
                             </div>
                           </div>

@@ -203,15 +203,15 @@ function Page2() {
               />
             </div>
             <div className="pl-[50px] flex flex-col gap-y-6">
-              <div>San pham: {shopInfo?.numberOfProduct}</div>
-              <div>Danh gia trung binh: {shopInfo?.avgRating}</div>
+              <div>Sản phẩm: {shopInfo?.numberOfProduct}</div>
+              <div>Đánh giá trung binh: {shopInfo?.avgRating}</div>
               <div>So danh gia: {shopInfo?.numberOfRating}</div>
             </div>
             <div className="pl-[50px] flex flex-col gap-y-6">
-              <div>So san pham da ban: {shopInfo?.numberOfSold}</div>
-              <div>Tong so don hang: {shopInfo?.numberOfOrder}</div>
+              <div>So sản phẩm da ban: {shopInfo?.numberOfSold}</div>
+              <div>Tổng số đơn hàng: {shopInfo?.numberOfOrder}</div>
               <div>
-                Ti le don hang thanh cong:{" "}
+               Tỉ lệ đơn hàng thành công:{" "}
                 {(
                   (shopInfo?.numberOfSuccesOrder / shopInfo?.numberOfOrder) *
                   100
@@ -241,13 +241,13 @@ function Page2() {
                             if (category) {
                               categoryObj.push(item.id);
                               router.push(
-                                `${idOfShop}?category=${JSON.stringify(
+                                `/${idOfShop}?category=${JSON.stringify(
                                   categoryObj
                                 )}&keyword=${keyWord}&typeProduct=${typeProduct}`
                               );
                             } else {
                               router.push(
-                                `${idOfShop}?category=${encodeURIComponent(
+                                `/${idOfShop}?category=${encodeURIComponent(
                                   JSON.stringify([item.id])
                                 )}&keyword=${keyWord}&&typeProduct=${typeProduct}`
                               );
@@ -258,13 +258,13 @@ function Page2() {
                                 (cate: any) => cate !== item.id
                               );
                               router.push(
-                                `${idOfShop}?category=${JSON.stringify(
+                                `/${idOfShop}?category=${JSON.stringify(
                                   categoryObj
                                 )}&keyword=${keyWord}&typeProduct=${typeProduct}`
                               );
                             } else {
                               router.push(
-                                `${idOfShop}?category=${JSON.stringify(
+                                `/${idOfShop}?category=${JSON.stringify(
                                   []
                                 )}&keyword=${keyWord}&  &typeProduct=${typeProduct}`
                               );
@@ -331,7 +331,7 @@ function Page2() {
             </div>
             <div className="pl-4 col-span-5">
               {keyWord && <div>Kêt quả tìm kiếm cho từ khóa {keyWord}</div>}
-              {!keyWord && <div>Danh sach san pham cua shop</div>}
+              {!keyWord && <div>Danh sach sản phẩm cua shop</div>}
 
               {listProduct?.length > 0 && (
                 <div className="grid md:grid-cols-5 grid-cols-3 gap-x-4 mt-4">

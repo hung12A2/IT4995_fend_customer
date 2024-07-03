@@ -51,7 +51,7 @@ export default function KiotCard({ kiot }: { kiot: any }) {
             <StarIcon color="success" className="w-fit" />
             {avgRating.toFixed(1)}
           </div>
-          <div className="w-fit">{products?.length} san pham</div>
+          <div className="w-fit">{products?.length} sản phẩm</div>
         </div>
         <div className="flex flex-row justify-between my-2 w-full">
           {kiot?.distance && (

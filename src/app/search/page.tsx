@@ -615,7 +615,7 @@ function Page2() {
                 <FilterAltOutlinedIcon className="mr-2" /> Bộ lọc tìm kiếm
               </div>
               <div className="mt-4 flex flex-col gap-y-2">
-                <div className="text-lg mt-2">Theo pham vi</div>
+                <div className="text-lg mt-2">Theo phạm vị</div>
                 <RadioGroup>
                   {scopeList.map((item: any) => {
                     return (
@@ -646,7 +646,7 @@ function Page2() {
 
                 {scope === "kiot" && distance && (
                   <>
-                    <div className="text-lg mt-2">Theo khoang cach</div>
+                    <div className="text-lg mt-2">Theo khoảng cách</div>
                     <Input
                       min={1}
                       value={+distance}

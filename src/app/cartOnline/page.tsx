@@ -114,11 +114,11 @@ export default function Page() {
           <div className="col-span-1">
             <div></div>
           </div>
-          <div className="col-span-3">San pham</div>
-          <div className="col-span-2">Don gia</div>
-          <div className="col-span-2">So luong</div>
-          <div className="col-span-1">So tien</div>
-          <div className="col-span-1">Thao tac</div>
+          <div className="col-span-3">Sản phẩm</div>
+          <div className="col-span-2">Đơn giá</div>
+          <div className="col-span-2">Số lượng</div>
+          <div className="col-span-1">Số tiền</div>
+          <div className="col-span-1">Thao tác</div>
         </div>
 
         <div className="mb-8 w-full flex justify-center">
@@ -308,7 +308,7 @@ export default function Page() {
         <div className="border-gray-200 w-2/3 bg-white mb- px-4 py-4">
           <div className="flex flex-col justify-center items-center bg-white">
             <h1 className="text-xl mt-2 text-green-700 mt-4">
-              Top san pham ban chay
+             Top sản phẩm bán chạy
             </h1>
             <div className="border-2 border-green-300 w-full"></div>
           </div>
@@ -325,7 +325,7 @@ export default function Page() {
             <Button className="bg-red-500 text-white px-16">Xoa</Button>
             <div className="flex flex-row gap-x-12">
               <div className="flex items-center ">
-                Tong thanh toan: (
+                Tổng thanh toán: (
                 {Object.values(productCheckboxes).filter(Boolean).length} san
                 pham):{" "}
                 <span className="text-xl underline text-green-700 font-medium ml-2">
@@ -359,7 +359,7 @@ export default function Page() {
                 }}
                 className="px-16 py-2  bg-green-700 text-md text-white"
               >
-                Mua hang
+                Mua hàng
               </Button>
             </div>
           </div>

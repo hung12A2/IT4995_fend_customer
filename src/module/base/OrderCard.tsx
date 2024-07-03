@@ -102,7 +102,7 @@ export default function OrderCard({ order }: { order: any }) {
       <Dialog open={openRatingForm} onOpenChange={setOpenRatingForm}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Danh gia san pham</DialogTitle>
+            <DialogTitle>ĐÁNH GIÁ SẢN PHẨM</DialogTitle>
           </DialogHeader>
           <div>
             <FormProvider {...formContext}>
@@ -127,14 +127,14 @@ export default function OrderCard({ order }: { order: any }) {
                       <div className="mt-4">
                         <SelectField
                           name={`rating_${product?.id}`}
-                          label="Danh gia"
+                          label="Đánh giá"
                           required={true}
                           options={[
                             { value: 1, label: "1 sao - Te" },
-                            { value: 2, label: "2 sao - Khong hai long" },
-                            { value: 3, label: "3 sao - Binh thuong" },
-                            { value: 4, label: "4 sao - Hai long" },
-                            { value: 5, label: "5 sao - Rat hai long" },
+                            { value: 2, label: "2 sao - Không hài lòng" },
+                            { value: 3, label: "3 sao - Bình thường" },
+                            { value: 4, label: "4 sao - Hài lòng" },
+                            { value: 5, label: "5 sao - Rất hài lòng" },
                           ]}
                         ></SelectField>
                       </div>
@@ -143,7 +143,7 @@ export default function OrderCard({ order }: { order: any }) {
                           required={true}
                           name={`comment_${product?.id}`}
                           label="Nhan xet"
-                          placeholder="Danh gia cua ban ve san pham nay"
+                          placeholder="Đánh giá cua ban ve sản phẩm nay"
                         ></TextField>
                       </div>
                     </div>
@@ -156,7 +156,7 @@ export default function OrderCard({ order }: { order: any }) {
                   setOpenRatingForm(false);
                 }}
               >
-                Huy
+                Hủy
               </Button>
               <Button
                 className="text-white bg-green-600 hover:bg-green-500"
@@ -191,18 +191,18 @@ export default function OrderCard({ order }: { order: any }) {
 
                   if (check) {
                     toast({
-                      title: "Danh gia thanh cong",
+                      title: "Đánh giá thanh cong",
                     });
                   } else {
                     toast({
-                      title: "Danh gia that bai",
+                      title: "Đánh giá that bai",
                     });
                   }
 
                   setOpenRatingForm(false);
                 })}
               >
-                Hoan thanh
+                Hoàn thành
               </Button>
             </div>
           </div>
@@ -211,11 +211,11 @@ export default function OrderCard({ order }: { order: any }) {
       <Dialog open={openReturn} onOpenChange={setOpenReturn}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Thong tin hoan hang</DialogTitle>
+            <DialogTitle>Thông tin đơn hàng</DialogTitle>
           </DialogHeader>
           <div>
             <div className="py-2 border-b-[1px] border-gray-300 ">
-              DON HANG: <span>{order?.id.slice(1, 10).toUpperCase()}</span>
+              ĐƠN HÀNG: <span>{order?.id.slice(1, 10).toUpperCase()}</span>
             </div>
             {items &&
               items.map((item: any) => {
@@ -238,7 +238,7 @@ export default function OrderCard({ order }: { order: any }) {
                         <div>{product?.name}</div>
                         <div>x{item?.quantity}</div>
                         <div className="text-sm text-green-600 border-green-600 border-[1px] px-1">
-                          Tra hang mien phi 15 ngay
+                        Trả hàng miễn phí 15 ngày
                         </div>
                       </div>
                     </div>
@@ -266,15 +266,15 @@ export default function OrderCard({ order }: { order: any }) {
               <div className="h-[1px] w-full bg-gray-300 mb-4"></div>
               <div className="flex flex-col">
                 <div className="text-xl font-medium mb-4">
-                  Thong tin hoan tien
+                  Thông tin hoàn tiền
                 </div>
                 <div className="flex flex-row gap-x-1 items-center">
-                  <div className="w-[150px]"> So tien hoan lai: </div>
+                  <div className="w-[150px]">Số tiền hoàn lại : </div>
                   <span className="text-xl">{order?.priceOfAll}d</span>
                 </div>
                 <div className="flex flex-row gap-x-1 my-2 items-center">
-                  <div className="w-[150px]"> Hoan tien vao: </div>
-                  <span className="">So du tai khoan LunaShop</span>
+                  <div className="w-[150px]"> Hoàn tiền vào: </div>
+                  <span className="">Số dư tài khoản LunaShop</span>
                 </div>
                 <div></div>
               </div>
@@ -284,7 +284,7 @@ export default function OrderCard({ order }: { order: any }) {
                     setOpenReturn(false);
                   }}
                 >
-                  Huy
+                  Hủy
                 </Button>
                 <Button
                   className="text-white bg-green-600 hover:bg-green-500"
@@ -317,7 +317,7 @@ export default function OrderCard({ order }: { order: any }) {
                     setOpenRatingForm(false);
                   })}
                 >
-                  Hoan thanh
+                  Hoàn thành
                 </Button>
               </div>
             </FormProvider>
@@ -327,7 +327,7 @@ export default function OrderCard({ order }: { order: any }) {
       <Dialog open={openViewRating} onOpenChange={setOpenViewRating}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Danh gia san pham</DialogTitle>
+            <DialogTitle>ĐÁNH GIÁ SẢN PHẨM</DialogTitle>
           </DialogHeader>
 
           <div>
@@ -386,16 +386,16 @@ export default function OrderCard({ order }: { order: any }) {
         {(status == "received" ||
           status == "rating" ||
           status == "delivered") && (
-          <div className="text-lg text-green-600">HOAN THANH</div>
+          <div className="text-lg text-green-600">HOÀN THÀNH</div>
         )}
         {status == "returned" && (
-          <div className="text-lg text-green-600">DA HOAN TIEN</div>
+          <div className="text-lg text-green-600">ĐÃ HOÀN TIỀN</div>
         )}
         {status == "canceled" && (
-          <div className="text-lg text-green-600">DA HUY</div>
+          <div className="text-lg text-green-600">ĐÃ HỦY</div>
         )}
         {status == "rejected" && (
-          <div className="text-lg text-green-600">BI TU CHOI</div>
+          <div className="text-lg text-green-600">BỊ TỪ CHỐI</div>
         )}
         {status != "received" &&
           status != "rating" &&
@@ -403,10 +403,10 @@ export default function OrderCard({ order }: { order: any }) {
           status != "canceled" &&
           status != "rejected" &&
           status != "delivered" && (
-            <div className="text-lg text-green-600">CHO GIAO HANG</div>
+            <div className="text-lg text-green-600">CHỜ GIAO HÀNG</div>
           )}
 
-        {/* <div className="text-lg text-green-600">CHO GIAO HANG</div> */}
+        {/* <div className="text-lg text-green-600">CHỜ GIAO HÀNG</div> */}
       </div>
 
       <div className="">
@@ -431,7 +431,7 @@ export default function OrderCard({ order }: { order: any }) {
                     <div>{product?.name}</div>
                     <div>x{item?.quantity}</div>
                     <div className="text-sm text-green-600 border-green-600 border-[1px] px-1">
-                      Tra hang mien phi 15 ngay
+                    Trả hàng miễn phí 15 ngày
                     </div>
                   </div>
                 </div>
@@ -452,7 +452,7 @@ export default function OrderCard({ order }: { order: any }) {
                   setOpenRatingForm(true);
                 }}
               >
-                Danh gia
+                Đánh giá
               </div>
             )}
             {status == "rating" && (
@@ -462,7 +462,7 @@ export default function OrderCard({ order }: { order: any }) {
                   setOpenViewRating(true);
                 }}
               >
-                Xem danh gia
+               Xem đánh giá
               </div>
             )}
             {status == "delivered" && (
@@ -475,17 +475,17 @@ export default function OrderCard({ order }: { order: any }) {
 
                   if (data?.code == 200) {
                     toast({
-                      title: "Da nhan hang thanh cong",
+                      title: "Đã nhận hàng thanh cong",
                     });
                   } else {
                     toast({
-                      title: "Da nhan hang that bai",
+                      title: "Đã nhận hàng that bai",
                     });
                   }
                 }}
                 className="px-4 py-2 border-[1px] border-gray-300 hover:bg-green-500 bg-green-600 text-white hover:cursor-grab"
               >
-                Da nhan hang
+                Đã nhận hàng
               </div>
             )}
             {status == "delivered" && (
@@ -495,7 +495,7 @@ export default function OrderCard({ order }: { order: any }) {
                   setOpenReturn(true);
                 }}
               >
-                Tra hang/ hoan tien
+               Trả hàng/ hoàn tiền
               </div>
             )}
 
@@ -503,12 +503,12 @@ export default function OrderCard({ order }: { order: any }) {
               status == "canceled" ||
               status == "rejected") && (
               <div className="px-4 py-2 border-[1px] border-gray-300 hover:bg-green-500 text-white bg-green-600 hover:cursor-grab">
-                Mua Lai
+               Mua lại
               </div>
             )}
 
             <div className="px-4 py-2 border-[1px] border-gray-300 hover:bg-gray-200 hover:cursor-grab">
-              Lien he nguoi ban
+              Liên hệ người bán
             </div>
           </div>
         </div>

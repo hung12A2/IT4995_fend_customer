@@ -91,7 +91,7 @@ export default function Page() {
         <div className="flex flex-col w-full bg-white">
           <div className="px-6 py-4 flex flex-col gap-y-2 border-b-[1px] border-gray-300">
             <div className="text-lg">Vi cua toi</div>
-            <div>Nap tien vao LunaShop thong qua VNPay</div>
+            <div>Nạp tiền vao LunaShop thong qua VNPay</div>
           </div>
           <div className="grid grid-cols-7 mt-4">
             <div className="col-span-4 px-6 flex flex-col ">
@@ -109,7 +109,7 @@ export default function Page() {
                 </div>
               </div>
               <div className="mt-6">
-                <div className="my-2 text-lg">So tien nap (VND)</div>
+                <div className="my-2 text-lg">Số tiền nap (VND)</div>
                 <input
                   type="number"
                   className="w-20 h-8 border border-gray-300 rounde-md px-4 py-4 w-full flex flex-row  focus:outline-none"
@@ -151,7 +151,7 @@ export default function Page() {
               <div className="my-2">Goi y ngan hang lien ket truc tiep</div>
               <div className="text-sm font-light">
                 Lien ket voi cac tai khoan ngan hang duoi day de thuc hien giao
-                dich duoc nhanh cho va mien phi Nap tien, thanh toan, rut tien
+                dich duoc nhanh cho va mien phi Nạp tiền, thanh toan, rut tien
               </div>
               <div className="grid grid-cols-4 mt-4 gap-y-4">
                 {listLinkBank.map((item: any, index: number) => (

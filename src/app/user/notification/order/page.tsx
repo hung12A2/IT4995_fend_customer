@@ -69,7 +69,7 @@ export default function Page() {
         <NavUser />
         <div className="flex flex-col w-full bg-white mb-12">
           <div className="px-4 py-4 border-b-[1px] border-gray-300 text-gray-500">
-            Thong bao don hang
+            Thông báo don hang
           </div>
           <div>
             {listNoti &&

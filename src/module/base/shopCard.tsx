@@ -51,7 +51,7 @@ export default function ShopCard({ shop }: { shop: any }) {
             <StarIcon color="success" className="w-fit" />
             {avgRating.toFixed(1)}
           </div>
-          <div className="w-fit">{products?.length} san pham</div>
+          <div className="w-fit">{products?.length} sản phẩm</div>
         </div>
         <div
           className="px-2 py-1 border-2 border-green-600 rounded-sm hover:cursor-grab"

@@ -281,7 +281,7 @@ export default function ProductPage() {
                   </div>
                 </div>
                 <div className="grid grid-cols-6 mt-6">
-                  <div className="col-span-1 font-light">Van chuyen</div>
+                  <div className="col-span-1 font-light">Vận chuyển</div>
                   <div className="col-span-5">
                     <div className=" flex flex-row items-center gap-x-3">
                       <LocalShippingIcon className="w-6 h-6" />
@@ -297,7 +297,7 @@ export default function ProductPage() {
                       <HoverCard>
                         <HoverCardTrigger>
                           <div className="ml-9 mt-4 font-light hover:cursor-grab underline">
-                            Chinh sach van chuyen
+                            Chính sách vận chuyển
                           </div>
                         </HoverCardTrigger>
                         <HoverCardContent>
@@ -312,7 +312,7 @@ export default function ProductPage() {
                   </div>
                 </div>
                 <div className="grid grid-cols-6 mt-6">
-                  <div className="col-span-1 font-light">So luong</div>
+                  <div className="col-span-1 font-light">Số lượng </div>
                   <div className="col-span-5">
                     <div className="flex flex-row items-center gap-x-3">
                       <Input
@@ -324,7 +324,7 @@ export default function ProductPage() {
                         className="w-16 h-10 border-2 border-gray-300 rounded-sm"
                       />
                       <div className="font-light">
-                        {product.countInStock} san pham co san{" "}
+                        {product.countInStock} sản phẩm có sẵn
                       </div>
                     </div>
                   </div>
@@ -348,14 +348,14 @@ export default function ProductPage() {
                               isKiot: false,
                             });
                             toast({
-                              title: "Them vao gio hang online thanh cong",
+                              title: "Thêm vào giỏ hàng thành công",
                             });
                           }
                         }}
                         className="w-fit bg-green-600 text-white  h-12 mt-6 rounded-sm hover:bg-green-700 px-4 py-1"
                       >
                         <AddShoppingCartIcon className="w-6 h-6 mr-2" />
-                        Them vao gio hang online
+                        Thêm vào giỏ hàng online
                       </button>
                     )}
 
@@ -376,14 +376,14 @@ export default function ProductPage() {
                               isKiot: true,
                             });
                             toast({
-                              title: "Them vao gio hang kiot thanh cong",
+                              title: "Thêm vào giỏ hàng kiot thành công",
                             });
                           }
                         }}
                         className="w-fit bg-green-600 text-white  h-12 mt-6 rounded-sm hover:bg-green-700 px-4 py-1"
                       >
                         <AddShoppingCartIcon className="w-6 h-6 mr-2" />
-                        Them vao gio hang kiot
+                        Thêm vào giỏ hàng kiot
                       </button>
                     )}
                   </div>
@@ -402,9 +402,9 @@ export default function ProductPage() {
         </div>
 
         <div className="w-2/3 mt-6 bg-white p-8 flex flex-col ">
-          <div className="text-lg">CHI TIET SAN PHAM</div>
+          <div className="text-lg">CHI TIẾT SẢN PHẨM</div>
           <div className="grid grid-cols-6 mt-8 gap-y-4">
-            <div className="col-span-1">Danh muc</div>
+            <div className="col-span-1">Danh mục</div>
             <div className="col-span-5">
               <BreadcrumbWithCustomSeparator
                 categories={product?.cateName}
@@ -412,7 +412,7 @@ export default function ProductPage() {
                 name={product?.name}
               />
             </div>
-            <div className="col-span-1">Chi tiet san pham</div>
+            <div className="col-span-1">Chi tiết sản phẩm</div>
             <div className="col-span-5">
               {parse(product?.productDetails || "")}
             </div>
@@ -420,7 +420,7 @@ export default function ProductPage() {
         </div>
 
         <div className="p-8 w-1/2 bg-white mt-6">
-          <div className="text-lg">DANH GIA SAN PHAM</div>
+          <div className="text-lg">ĐÁNH GIÁ SẢN PHẨM</div>
           <div className="mt-6 p-8 flex flex-row border-green-600 border-[1px] bg-green-50 w-fit">
             <div className="flex flex-col">
               <div className="flex flex-row gap-x-2 text-green-600 items-center">
