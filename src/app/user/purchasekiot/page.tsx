@@ -38,13 +38,19 @@ export default function Page() {
   useEffect(() => {
     async function fetchData() {
       let dataReturn: any = await axios
-        .get(`ordersKiot`)
+        .get(`ordersKiot`, {
+          params: {
+            filter: {
+              order: "createdAt DESC",
+            },
+          },
+        })
         .then((res) => res.data)
         .catch((e) => console.log(e));
 
-        console.log(dataReturn);
+      console.log(dataReturn);
 
-        console.log(dataReturn);
+      console.log(dataReturn);
 
       const listIdShop = dataReturn?.map((item: any) => item.idOfKiot);
       const listIdOrder = dataReturn?.map((item: any) => item.listIdOrder);
@@ -148,7 +154,7 @@ export default function Page() {
     <div className="bg-gray-100 flex flex-col justify-center items-center">
       <Header />
       <div className="mt-[150px] w-2/3 flex flex-row">
-        <NavUser /> 
+        <NavUser />
         <div className="flex flex-col w-full">
           <div className="flex flex-row w-full bg-white ">
             <div
@@ -159,7 +165,7 @@ export default function Page() {
                 setSelectedPage(1);
               }}
             >
-              Tat ca
+             Tất cả
             </div>
             <div
               className={`w-1/5 flex justify-center items-center py-2 hover:cursor-grab ${
@@ -169,7 +175,7 @@ export default function Page() {
                 setSelectedPage(2);
               }}
             >
-              Dang van chuyen
+              Đang vận chuyển
             </div>
             <div
               className={`w-1/5 flex justify-center items-center py-2 hover:cursor-grab${
@@ -189,7 +195,7 @@ export default function Page() {
                 setSelectedPage(4);
               }}
             >
-              Da huy
+              Đã hủy
             </div>
             <div
               className={`w-1/5 flex justify-center items-center py-2 hover:cursor-grab${
@@ -209,7 +215,7 @@ export default function Page() {
             })}
           {selectedPage == 1 && ordersData.length == 0 && (
             <div className="text-center h-[60vh] flex items-center justify-center bg-white mt-4">
-              Khong co don hang nao
+              Không có đơn hàng nào
             </div>
           )}
           {selectedPage == 2 &&
@@ -219,7 +225,7 @@ export default function Page() {
             })}
           {selectedPage == 2 && shippingOrders.length == 0 && (
             <div className="text-center h-[60vh] flex items-center justify-center bg-white mt-4">
-              Khong co don hang nao
+              Không có đơn hàng nào
             </div>
           )}
           {selectedPage == 3 &&
@@ -229,7 +235,7 @@ export default function Page() {
             })}
           {selectedPage == 3 && completedOrders.length == 0 && (
             <div className="text-center h-[60vh] flex items-center justify-center bg-white mt-4">
-              Khong co don hang nao
+              Không có đơn hàng nào
             </div>
           )}
           {selectedPage == 4 &&
@@ -239,7 +245,7 @@ export default function Page() {
             })}
           {selectedPage == 4 && canceledOrders.length == 0 && (
             <div className="text-center h-[60vh] flex items-center justify-center bg-white mt-4">
-              Khong co don hang nao
+              Không có đơn hàng nào
             </div>
           )}
           {selectedPage == 5 &&
@@ -249,7 +255,7 @@ export default function Page() {
             })}
           {selectedPage == 5 && returnOrders.length == 0 && (
             <div className="text-center h-[60vh] flex items-center justify-center bg-white mt-4">
-              Khong co don hang nao
+              Không có đơn hàng nào
             </div>
           )}
         </div>

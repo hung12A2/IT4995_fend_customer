@@ -155,7 +155,10 @@ function Header2() {
               <div
                 className="hover:cursor-grab hover:text-gray-200 text-sm pr-2 border-r-[1px] border-gray-300"
                 onClick={() => {
-                  router.push(`/createShop`);
+                  if (user) router.push(`/createShop`);
+                  else {
+                    router.push(`/Login`);
+                  }
                 }}
               >
                 Kenh nguoi ban
@@ -287,10 +290,18 @@ function Header2() {
                       <div
                         className="py-2 px-4 hover:cursor-grab hover:bg-gray-200 border-b-[1px] border-gray-200"
                         onClick={() => {
-                          router.push("user/purchase");
+                          router.push("/user/purchase");
                         }}
                       >
-                       Đơn mua online
+                        Đơn mua online
+                      </div>
+                      <div
+                        className="py-2 px-4 hover:cursor-grab hover:bg-gray-200 border-b-[1px] border-gray-200"
+                        onClick={() => {
+                          router.push("/user/purchasekiot");
+                        }}
+                      >
+                       Đơn mua kiot
                       </div>
                       <div
                         className="py-2 px-4 hover:cursor-grab hover:bg-gray-200 border-b-[1px] border-gray-200"

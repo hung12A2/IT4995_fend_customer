@@ -43,7 +43,11 @@ export default function Page() {
         .catch((e) => console.log(e));
 
       if (res.id) {
-        setTypeForm("update");
+        if (res.status == "pending") {
+          setTypeForm("update");
+        } else if (res?.status == "rejected") {
+          setTypeForm("create");
+        }
         setValue("name", res.name);
         setValue("pickUpAddress", res.pickUpAddress);
         setValue("returnAddress", res.returnAddress);
@@ -350,7 +354,7 @@ export default function Page() {
               router.back();
             }}
           >
-            <NavigateBeforeIcon /> Tro lai
+            <NavigateBeforeIcon /> Trở lại
           </div>
           <div className="px-32 py-6 border-b-[1px] border-gray-300">
             Thong tin shop
@@ -359,7 +363,10 @@ export default function Page() {
             <div className="h-[80vh] flex flex-col justify-center w-full items-center text-center	">
               <div className="w-fit px-64">
                 Ban da co shop, dang nhap vao trang{" "}
-                <a href="https://it4995-stores2-node20.azurewebsites.net/" className="font-medium text-md text-green-600">
+                <a
+                  href="https://it4995-stores2-node20.azurewebsites.net/"
+                  className="font-medium text-md text-green-600"
+                >
                   https://it4995-stores2-node20.azurewebsites.net/
                 </a>
                 de quan ly shop cua minh nhes
@@ -487,7 +494,7 @@ export default function Page() {
                   className="px-4 py-1 text-white bg-green-600 hover:cursor-grab hover:bg-green-700"
                   onClick={handleSubmit(onSubmit)}
                 >
-                  Tiep theo
+                 {typeForm == "create" ? "Tạo" : "Cập nhập"}
                 </div>
               </div>
             </>

@@ -23,6 +23,7 @@ export default function KiotCard({ kiot }: { kiot: any }) {
         .get(`products`, {
           params: {
             filter: {
+              limit: 4,
               where: {
                 idOfKiot,
               },

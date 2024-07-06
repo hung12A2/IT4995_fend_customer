@@ -35,6 +35,7 @@ import ShopCard2 from "@/module/base/shopCard2";
 import parse from "html-react-parser";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Chat from "@/module/chat/chat";
+import { useAuthContext } from "@/provider/auth.provider";
 
 function formatDate(isoString: string) {
   const date = new Date(isoString);
@@ -97,6 +98,7 @@ export default function ProductPage() {
   const [product, setProduct] = useState<any>({});
   const [shop, setShop] = useState<any>();
   const [mainImg, setMainImg] = useState<any>({});
+  const { user, isAuthenticated } = useAuthContext();
   const [location, setLocation] = useState<any>();
   const [selectedLocation, setSelectedLocation] = useState<any>();
   const [quantity, setQuantity] = useState<number>(1);
@@ -157,6 +159,9 @@ export default function ProductPage() {
 
       setShopInfo(dataShopInfo[0]);
 
+      setProduct(productReturn);
+      setMainImg(productReturn?.image?.at(0).url);
+
       const dataLocation: any = await axios
         .get(`location-users`, {
           params: {
@@ -169,12 +174,11 @@ export default function ProductPage() {
         .catch((e) => console.log(e));
 
       setLocation(dataLocation);
-      let locationDefautl = dataLocation.filter((location: any) => {
+      let locationDefautl = dataLocation?.filter((location: any) => {
         return location.isDefaultKiot;
       })[0];
       setSelectedLocation(locationDefautl);
-      setProduct(productReturn);
-      setMainImg(productReturn?.image?.at(0).url);
+
     }
 
     fetchData();
@@ -286,12 +290,14 @@ export default function ProductPage() {
                     <div className=" flex flex-row items-center gap-x-3">
                       <LocalShippingIcon className="w-6 h-6" />
                       <div className="font-light">Vận chuyển tới</div>
-                      <LocationCard
-                        location={location}
-                        setLocation={(newLocation: any) => {
-                          setLocation(newLocation);
-                        }}
-                      />
+                      {isAuthenticated && (
+                        <LocationCard
+                          location={location}
+                          setLocation={(newLocation: any) => {
+                            setLocation(newLocation);
+                          }}
+                        />
+                      )}
                     </div>
                     <div>
                       <HoverCard>
@@ -436,7 +442,7 @@ export default function ProductPage() {
             </div>
             <div className="flex flex-row items-center gap-x-4 ml-16">
               <div className="px-3 py-1 text-green-600 border-green-600 border-[1px] hover:cursor-grab">
-                Tat ca
+               Tất cả
               </div>
               <div className="px-3 py-1 border-[1px] border-gray-500 hover:cursor-grab">
                 5 sao

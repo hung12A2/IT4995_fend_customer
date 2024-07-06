@@ -65,19 +65,22 @@ export default function Home() {
           .then((res) => res)
           .catch((e) => console.log(e));
 
-        let dataKiotNear: any = await axios.get(`kiots`, {
-          params: {
-            filter: {
-              where: {
-                pickUpGeometry: {
-                  near: dataLocation[0]?.geometry,
-                  maxDistance: 10,
-                  unit: "kilometers",
+        let dataKiotNear: any = [];
+        if (dataLocation.length > 0) {
+          dataKiotNear = await axios.get(`kiots`, {
+            params: {
+              filter: {
+                where: {
+                  pickUpGeometry: {
+                    near: dataLocation[0]?.geometry,
+                    maxDistance: 10,
+                    unit: "kilometers",
+                  },
                 },
               },
             },
-          },
-        });
+          });
+        }
 
         const listIdKiot = dataKiotNear.map((kiot: any) => kiot.id);
 

@@ -23,6 +23,7 @@ export default function ShopCard({ shop }: { shop: any }) {
         .get(`products`, {
           params: {
             filter: {
+              limit: 4,
               where: {
                 idOfShop,
               },

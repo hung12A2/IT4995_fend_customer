@@ -47,19 +47,35 @@ function Page2() {
   useEffect(() => {
     async function fetchWallet() {
       if (typeof window !== undefined) {
-        const data = await axios.post(`wallet-of-user/update`, {
-          type: "charge",
-          amountMoney: vnPayAmount,
-          vnpayCode: `${vnPayBankTranNo}-${
-            window?.location.href.split("?")[1]
-          }`,
-        });
-      }
 
+        const dataTransaction: any = await axios.get(`transactions`, {
+          params: {
+            filter: {
+              order: "createdAt DESC",
+              where: {
+                idOfUser: user?.id,
+                idOfOrder: `${vnPayBankTranNo}-${
+                  window?.location.href.split("?")[1]
+                }`,
+              },
+            },
+          },
+        });
+
+        if (dataTransaction?.length == 0) {
+          await axios.post(`wallet-of-user/update`, {
+            type: "charge",
+            amountMoney: vnPayAmount,
+            vnpayCode: `${vnPayBankTranNo}-${
+              window?.location.href.split("?")[1]
+            }`,
+          });
+        }
+      }
     }
 
     fetchWallet();
-  }, [vnPayAmount, vnPayBankTranNo]);
+  }, [vnPayAmount, vnPayBankTranNo, user?.id]);
 
   const router = useRouter();
 

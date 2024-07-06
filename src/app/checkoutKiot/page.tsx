@@ -156,7 +156,7 @@ function Page2() {
                       <div className="col-span-2 text-lg">Sản phẩm</div>
                       <div className="col-span-1 text-gray-500">Đơn giá</div>
                       <div className="col-span-1 text-gray-500">Số lượng</div>
-                      <div className="col-span-1 text-gray-500">Thanh tien</div>
+                      <div className="col-span-1 text-gray-500">Thành tiền</div>
                     </div>
                   )}
 
@@ -248,7 +248,7 @@ function Page2() {
 
           <div className="flex flex-col px-6 py-6 bg-white">
             <div className="flex flex-row gap-x-4 py-6 border-b-[1px] border-gray-300 items-centers">
-              <div>Phuong thuc thanh toan</div>
+              <div>Phương thức thanh toán</div>
               <div
                 onClick={() => {
                   setPaymentMethod("payOnline");
@@ -271,13 +271,13 @@ function Page2() {
                     : ""
                 }`}
               >
-                Thanh toan khi nhan hang
+                Thanh toan khi nhận hàng
               </div>
             </div>
             <div className="py-4 border-b-[1px] border-gray-300">
               {paymentMethod == "payOnline"
                 ? "Thanh toan qua vi LunaShop"
-                : "Thanh toan khi nhan hang: Phi thu ho: 0vnd"}
+                : "Thanh toan khi nhận hàng: Phi thu ho: 0vnd"}
             </div>
             <div className="flex flex-row justify-end gap-x-6 py-4">
               <div className="flex flex-col gap-y-4">
@@ -317,8 +317,8 @@ function Page2() {
                         {
                           fromName: kiot?.name,
                           fromPhone: kiot?.phoneNumber,
-                          toName: user?.fullName,
-                          toPhone: user?.phoneNumber,
+                          toName: selectedLocation?.name || user?.fullName,
+                          toPhone: selectedLocation?.phoneNumber || user?.phoneNumber,
                           fromAddress: kiot?.pickUpAddress,
                           toAddress: selectedLocation?.address,
                           fromDistrict: `${kiot?.pickUpDistrictName}`,

@@ -20,6 +20,7 @@ import { CheckedField, SelectField, TextField } from "./fieldBase";
 import axios from "../AxiosCustom/custome_Axios";
 import { useToast } from "@/components/ui/use-toast";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { useAuthContext } from "@/provider/auth.provider";
 
 export default function LocationCard({
   location = [],
@@ -38,16 +39,18 @@ export default function LocationCard({
   const [selectedDistrict, setSelectedDistrict] = useState<string>("");
   const [listDistrict, setListDistrict] = useState([]);
   const [listWard, setListWard] = useState([]);
+  const {user, isAuthenticated} = useAuthContext();
 
   const formContext = useForm({});
   const { handleSubmit } = formContext;
   let formUpdateContext = useForm({});
   const { handleSubmit: handleSubmitUpdate, setValue: setValueUpdate } =
     formUpdateContext;
-  location = location || [];
-  const locationKiotDefault = location?.filter(
+
+  location = Array.isArray(location) ? location : [];
+  const locationKiotDefault = location.filter(
     (item: any) => item?.isDefaultKiot == true
-  )[0];
+  )[0] 
 
   const [selectedLocation, setSelectedLocation] =
     useState<any>(locationKiotDefault);
@@ -137,6 +140,7 @@ export default function LocationCard({
       value: `${updateLocation?.wardName}-${updateLocation?.wardId}`,
       label: updateLocation?.wardName,
     });
+    setValueUpdate("name", updateLocation?.name);
     setValueUpdate("isDefaultKiot", updateLocation?.isDefaultKiot);
     setValueUpdate("isDefaultOnline", updateLocation?.isDefaultOnline);
   }, [selectedUpdate, location, formUpdateContext, setValueUpdate]);
@@ -211,9 +215,9 @@ export default function LocationCard({
             </div>
             <Button
               onClick={handleSubmit(async (data) => {
-                let province = data.province.value;
-                let district = data.district.value;
-                let ward = data.ward.value;
+                let province = data?.province.value;
+                let district = data?.district.value;
+                let ward = data?.ward.value;
                 const dataReturn: any = await axios.post(
                   `/location-users/create`,
                   {
@@ -313,9 +317,9 @@ export default function LocationCard({
             </div>
             <Button
               onClick={handleSubmitUpdate(async (data) => {
-                let province = data.province.value;
-                let district = data.district.value;
-                let ward = data.ward.value;
+                let province = data?.province.value;
+                let district = data?.district.value;
+                let ward = data?.ward.value;
                 const dataReturn: any = await axios.post(
                   `/location-users/update/${selectedUpdate}`,
                   {
@@ -356,7 +360,7 @@ export default function LocationCard({
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger>
           <div className="border-[1px] px-2 py-1 rounded-sm border-green-600 hover:cursor-grab">
-            {selectedLocation?.wardName},{selectedLocation?.districtName}
+            {selectedLocation?.wardName || 'Thị trấn Thanh Thủy'},{selectedLocation?.districtName || 'Huyện Thanh Thủy'}
             <ExpandMoreIcon className="ml-2" />
           </div>
         </DialogTrigger>
@@ -368,6 +372,13 @@ export default function LocationCard({
           <DialogDescription>
             <ScrollArea className="h-100 rounded-md ">
               <div className="mt-4">
+                {/* {
+                   && (
+                    <div className="text-red-600 text-lg font-medium">
+                      Vui lòng đăng nhập để chọn địa chỉ giao hàng
+                    </div>
+                  )
+                } */}
                 <RadioGroup
                   defaultValue={selectedLocationId}
                   onValueChange={(data) => {

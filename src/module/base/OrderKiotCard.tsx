@@ -181,7 +181,7 @@ export default function OrderKiotCard({ order }: { order: any }) {
                         isKiot: true,
                         idOfOrder: order?.id,
                         idOfKiot: shop?.id,
-                        idOfShop: order?.idOfShop
+                        idOfShop: order?.idOfShop,
                       })
                       .then((res) => res)
                       .catch((err) => {
@@ -239,7 +239,7 @@ export default function OrderKiotCard({ order }: { order: any }) {
                         <div>{product?.name}</div>
                         <div>x{item?.quantity}</div>
                         <div className="text-sm text-green-600 border-green-600 border-[1px] px-1">
-                        Trả hàng miễn phí 15 ngày
+                          Trả hàng miễn phí 15 ngày
                         </div>
                       </div>
                     </div>
@@ -291,18 +291,22 @@ export default function OrderKiotCard({ order }: { order: any }) {
                   className="text-white bg-green-600 hover:bg-green-500"
                   onClick={handleSubmitReturn(async (data: any) => {
                     let dataForm = new FormData();
-                    dataForm.append("reason", data.reason);
+                    dataForm.append("reason", data?.reason);
                     if (data?.images) {
                       Array.from(data?.images).forEach((item: any) => {
                         dataForm.append("images", item);
                       });
                     }
                     const dataFetch: any = await axios
-                      .post(`orders/returned/order/${order?.id}`, dataForm, {
-                        headers:{
-                          'Content-Type': 'multipart/form-data'
+                      .post(
+                        `order-kiot/returned/order/${order?.id}`,
+                        dataForm,
+                        {
+                          headers: {
+                            "Content-Type": "multipart/form-data",
+                          },
                         }
-                      })
+                      )
                       .then((res) => res)
                       .catch((e) => console.log(e));
 
@@ -377,10 +381,12 @@ export default function OrderKiotCard({ order }: { order: any }) {
           <div className="px-2 hover:cursor-grab hover:bg-green-500 bg-green-600 text-white text-sm">
             <ChatIcon fontSize="small" /> Chat
           </div>
-          <div className="px-2 hover:cursor-grab hover:bg-green-100 border-gray-300 border-[1px] text-sm" 
+          <div
+            className="px-2 hover:cursor-grab hover:bg-green-100 border-gray-300 border-[1px] text-sm"
             onClick={() => {
               router.push(`/kiot/${shop?.id}`);
-            }}>
+            }}
+          >
             <StoreIcon fontSize="small" /> Xem shop
           </div>
         </div>
@@ -432,7 +438,7 @@ export default function OrderKiotCard({ order }: { order: any }) {
                     <div>{product?.name}</div>
                     <div>x{item?.quantity}</div>
                     <div className="text-sm text-green-600 border-green-600 border-[1px] px-1">
-                    Trả hàng miễn phí 15 ngày
+                      Trả hàng miễn phí 15 ngày
                     </div>
                   </div>
                 </div>
@@ -442,7 +448,7 @@ export default function OrderKiotCard({ order }: { order: any }) {
           })}
         <div className="mt-6 flex flex-col justify-end items-end">
           <div>
-            Thanh tien:{" "}
+            Thành tiền:{" "}
             <span className="text-lg text-green-600">{order?.priceOfAll}d</span>
           </div>
           <div className="mt-6 flex flex-row gap-x-4 justify-end">
@@ -463,14 +469,24 @@ export default function OrderKiotCard({ order }: { order: any }) {
                   setOpenViewRating(true);
                 }}
               >
-               Xem đánh giá
+                Xem đánh giá
               </div>
             )}
-            {status == "delivered" && (
+            {status == "returned" && (
+              <div
+                className="px-6 rounded-sm bg-green-600 py-2 border-[1px] text-white hover:cursor-grab"
+                onClick={() => {
+                  router.push(`/returnOrder/${order?.id}?type=kiot`);
+                }}
+              >
+                Thông tin hoàn hàng
+              </div>
+            )}
+            {status == "deliverd" && (
               <div
                 onClick={async () => {
                   const data: any = await axios
-                    .post(`orders/received/order/${order?.id}`)
+                    .post(`order-kiot/received/order/${order?.id}`)
                     .then((res) => res)
                     .catch((e) => console.log(e));
 
@@ -489,14 +505,14 @@ export default function OrderKiotCard({ order }: { order: any }) {
                 Đã nhận hàng
               </div>
             )}
-            {status == "delivered" && (
+            {status == "deliverd" && (
               <div
                 className="px-4 py-2 border-[1px] border-gray-300 hover:bg-gray-200 hover:cursor-grab"
                 onClick={() => {
                   setOpenReturn(true);
                 }}
               >
-               Trả hàng/ hoàn tiền
+                Trả hàng/ hoàn tiền
               </div>
             )}
 
@@ -504,7 +520,7 @@ export default function OrderKiotCard({ order }: { order: any }) {
               status == "canceled" ||
               status == "rejected") && (
               <div className="px-4 py-2 border-[1px] border-gray-300 hover:bg-green-500 text-white bg-green-600 hover:cursor-grab">
-               Mua lại
+                Mua lại
               </div>
             )}
 

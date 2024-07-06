@@ -103,7 +103,7 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     socket.on("server-listConversation", async (data) => {
-      const listIdShop = data.map((item: any) => item.idOfShop);
+      const listIdShop = data?.map((item: any) => item.idOfShop);
       let dataShop: any = await axios
         .get(`stores`, {
           params: {
@@ -119,7 +119,7 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
         .then((res) => res)
         .catch((e) => console.log(e));
 
-      data = data.map((item: any) => {
+      data = data?.map((item: any) => {
         return {
           ...item,
           shop: dataShop.find((shop: any) => shop.id === item.idOfShop),
@@ -131,13 +131,13 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
 
     socket.on("server-send-msg", (data) => {
       const { listMsg, listConversation } = state;
-      if ((listMsg?.[0] && listMsg[0].id != data.id) || ( listMsg?.length == 0)) {
+      if ((listMsg?.[0] && listMsg[0].id != data?.id) || ( listMsg?.length == 0)) {
         setListMsg([data, ...listMsg]);
       }
 
       const listCon = listConversation?.map((item: any) => {
-        if (item.idOfShop == data.idOfShop) {
-          item.lastMsg = data.content;
+        if (item.idOfShop == data?.idOfShop) {
+          item.lastMsg = data?.content;
 
           return item;
         }

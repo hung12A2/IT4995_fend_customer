@@ -42,8 +42,6 @@ export default function Page() {
         },
       });
 
-      console.log(data);
-
       setListTransaction(data);
     }
 
@@ -72,7 +70,7 @@ export default function Page() {
                   setSelectedPage(1);
                 }}
               >
-                Tat ca
+               Tất cả
               </div>
               <div
                 className={`w-1/3 flex justify-center items-center py-2 hover:cursor-grab ${

@@ -158,7 +158,7 @@ export default function Page() {
       });
 
       const dataShop = await axios
-        .get(`stores/${data.idOfShop}`)
+        .get(`stores/${data?.idOfShop}`)
         .then((res) => res)
         .catch((e) => console.log(e));
 
@@ -191,7 +191,7 @@ export default function Page() {
                 router.back();
               }}
             >
-              <NavigateBeforeIcon /> Tro lai
+              <NavigateBeforeIcon /> Trở lại
             </div>
             <div className="flex flex-row items-center">
               <div className="pr-4 text-sm border-r-[1px] border-gray-400">
@@ -218,7 +218,7 @@ export default function Page() {
                 <div className="w-[56px] h-[56px] border-[3px] flex justify-center items-center border-green-600 rounded-full bg-white">
                   <ListAltIcon color="success" />
                 </div>
-                <div className="text-sm mt-4">Don Hang Da Dat</div>
+                <div className="text-sm mt-4">Đơn Hàng Đã Đặt</div>
                 <div className="text-sm font-light mt-2">
                   {formatDate(
                     findStep("pending", orderData?.logs).updatedAt || ""
@@ -232,7 +232,7 @@ export default function Page() {
 
                 {findStep("accepted", orderData?.logs) ? (
                   <>
-                    <div className="text-sm mt-4">Da Chap Nhan Don Hang</div>
+                    <div className="text-sm mt-4">Đã Chấp Nhận Đơn Hàng</div>
                     <div className="text-sm font-light mt-2">
                       {formatDate(
                         findStep("accepted", orderData?.logs).updatedAt || ""
@@ -240,7 +240,7 @@ export default function Page() {
                     </div>{" "}
                   </>
                 ) : (
-                  <div className="text-sm mt-4">Cho Chap Nhan</div>
+                  <div className="text-sm mt-4">Chờ Chấp Nhận</div>
                 )}
               </div>
               <div className="col-span-1 flex flex-col  items-center">
@@ -249,7 +249,7 @@ export default function Page() {
                 </div>
                 {findStep("inTransist", orderData?.logs) ? (
                   <>
-                    <div className="text-sm mt-4">Da Giao Cho DVVC</div>
+                    <div className="text-sm mt-4">Đã Giao Cho ĐVVC</div>
                     <div className="text-sm font-light mt-2">
                       {formatDate(
                         findStep("inTransist", orderData?.logs).updatedAt || ""
@@ -257,7 +257,7 @@ export default function Page() {
                     </div>
                   </>
                 ) : (
-                  <div className="text-sm mt-4">Cho Giao Cho DVVC</div>
+                  <div className="text-sm mt-4">Chờ Giao Cho DVVC</div>
                 )}
               </div>
               <div className="col-span-1 flex  flex-col  items-center">
@@ -266,7 +266,7 @@ export default function Page() {
                 </div>
                 {findStep("inTransist2", orderData?.logs) ? (
                   <>
-                    <div className="text-sm mt-4">Da Nhan Duoc Hang</div>
+                    <div className="text-sm mt-4">Đã Nhận Được Hàng</div>
                     <div className="text-sm font-light mt-2">
                       {formatDate(
                         findStep("inTransist2", orderData?.logs).updatedAt || ""
@@ -274,7 +274,7 @@ export default function Page() {
                     </div>
                   </>
                 ) : (
-                  <div className="text-sm mt-4">Cho Nhan Hang</div>
+                  <div className="text-sm mt-4">Chờ Nhận Hàng</div>
                 )}
               </div>
               <div className="col-span-1 flex flex-col  items-center">
@@ -285,7 +285,7 @@ export default function Page() {
                   <>
                     {" "}
                     <div className="text-sm mt-4">
-                      Don Hang Da Duoc Danh Gia
+                      Đơn Hàng Đã Được Đánh Giá
                     </div>
                     <div className="text-sm font-light mt-2">
                       {formatDate(
@@ -294,7 +294,7 @@ export default function Page() {
                     </div>
                   </>
                 ) : (
-                  <div className="text-sm mt-4">Danh Gia</div>
+                  <div className="text-sm mt-4">Đánh Giá</div>
                 )}
               </div>
             </div>
@@ -302,18 +302,18 @@ export default function Page() {
             <div className="flex flex-col px-6 bg-green-50 border-b-2 border-green-500">
               <div className="flex justify-end py-4 border-b-[1px] border-gray-200">
                 <div className="w-[200px] flex hover:cursor-grab justify-center items-center bg-green-600 text-white py-2">
-                  Mua lai
+                  Mua Lại
                 </div>
               </div>
               <div className="flex justify-end py-4 border-b-[1px] border-gray-200">
                 <div className="w-[200px] flex hover:cursor-grab justify-center items-center bg-white border-[1px] border-gray-200  py-2">
-                  Lien He Nguoi Ban
+                  Liên Hệ Người Bán
                 </div>
               </div>
               {orderData?.status == "rating" && (
                 <div className="flex justify-end py-4 border-b-[1px] border-gray-200">
                   <div className="w-[200px] hover:cursor-grab flex justify-center items-center bg-white border-[1px] border-gray-200  py-2">
-                    Xem Danh Gia
+                    Xem Đánh Giá
                   </div>
                 </div>
               )}
@@ -321,7 +321,7 @@ export default function Page() {
               {orderData?.status == "received" && (
                 <div className="flex justify-end py-4 border-b-[1px] border-gray-200">
                   <div className="w-[200px] flex hover:cursor-grab justify-center items-center bg-white border-[1px] border-gray-200  py-2">
-                    Danh Gia
+                    Đánh Giá
                   </div>
                 </div>
               )}
@@ -390,7 +390,12 @@ export default function Page() {
                   <div className="px-2 hover:cursor-grab hover:bg-green-500 bg-green-600 text-white text-sm">
                     <ChatIcon fontSize="small" /> Chat
                   </div>
-                  <div className="px-2 hover:cursor-grab hover:bg-green-100 border-gray-300 border-[1px] text-sm">
+                  <div
+                    className="px-2 hover:cursor-grab hover:bg-green-100 border-gray-300 border-[1px] text-sm"
+                    onClick={() => {
+                      router.push(`/shop/${orderData?.shop?.id}`);
+                    }}
+                  >
                     <StoreIcon fontSize="small" /> Xem shop
                   </div>
                 </div>
@@ -413,7 +418,7 @@ export default function Page() {
                               <div>{product?.name}</div>
                               <div>x{item?.quantity}</div>
                               <div className="text-sm text-green-600 border-green-600 border-[1px] px-1">
-                              Trả hàng miễn phí 15 ngày
+                                Trả hàng miễn phí 15 ngày
                               </div>
                             </div>
                           </div>
@@ -427,7 +432,7 @@ export default function Page() {
                         {orderData?.priceOfAll - orderData?.totalFee}d
                       </div>
                       <div className="flex items-center pr-6 text-sm">
-                        Tong tien hang
+                       Tổng tiền hàng
                       </div>
                     </div>
                     <div className="flex flex-row-reverse border-t-[1px] border-gray-300 w-full">
@@ -435,7 +440,7 @@ export default function Page() {
                         {orderData?.totalFee}d
                       </div>
                       <div className="flex items-center pr-6 text-sm">
-                        Phi van chuyen
+                       Phí vận chuyển
                       </div>
                     </div>
                     <div className="flex flex-row-reverse border-y-[1px] border-gray-300 w-full">
@@ -443,25 +448,25 @@ export default function Page() {
                         {orderData?.priceOfAll}d
                       </div>
                       <div className="flex items-center pr-6 text-sm">
-                        Thanh tien
+                        Thành tiền
                       </div>
                     </div>
                   </div>
                   <div className="w-full border-[1px] border-green-400 py-2 px-6 text-sm">
-                    Vui long thanh toan{" "}
+                    Vui lòng thanh toán
                     <span className="text-base font-medium text-green-600 px-2">
                       {orderData?.priceOfAll}d
                     </span>{" "}
-                    khi nhan hang
+                    khi nhận hàng
                   </div>
                   <div className="flex flex-row-reverse border-y-[1px] border-gray-300 w-full">
                     <div className="w-[250px] border-l-[1px] border-gray-300 flex justify-end py-2">
                       {orderData?.paymentMethod == "cod"
-                        ? "Thanh toan khi nhan hang"
+                        ? "Thanh toan khi nhận hàng"
                         : "Thanh toan online"}
                     </div>
                     <div className="flex items-center pr-6 text-sm">
-                      Phuong thuc thanh toan
+                      Phương thức thanh toán
                     </div>
                   </div>
                 </div>

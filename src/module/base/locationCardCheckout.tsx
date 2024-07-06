@@ -221,9 +221,9 @@ export default function LocationCard({
             </div>
             <Button
               onClick={handleSubmit(async (data) => {
-                let province = data.province.value;
-                let district = data.district.value;
-                let ward = data.ward.value;
+                let province = data?.province.value;
+                let district = data?.district.value;
+                let ward = data?.ward.value;
 
                 const dataReturn: any = await axios.post(
                   `/location-users/create`,
@@ -324,9 +324,9 @@ export default function LocationCard({
             </div>
             <Button
               onClick={handleSubmitUpdate(async (data) => {
-                let province = data.province.value;
-                let district = data.district.value;
-                let ward = data.ward.value;
+                let province = data?.province.value;
+                let district = data?.district.value;
+                let ward = data?.ward.value;
 
                 const dataReturn: any = await axios.post(
                   `/location-users/update/${selectedUpdate}`,

@@ -151,9 +151,9 @@ function Page2() {
             .then((res) => res)
             .catch((e) => console.log(e));
 
-          listShop = data.shop;
-          listKiot = data.kiot;
-          listProduct = data.products;
+          listShop = data?.shop;
+          listKiot = data?.kiot;
+          listProduct = data?.products;
 
           if (locationOnlineObject.length > 0) {
             listShop = listShop.filter((shop: any) => {
@@ -297,8 +297,8 @@ function Page2() {
             .then((res) => res)
             .catch((e) => console.log(e));
 
-          listShop = data.shop;
-          listKiot = data.kiot;
+          listShop = data?.shop;
+          listKiot = data?.kiot;
           listKiot = await Promise.all(
             listKiot?.map(async (kiot: any) => {
               const to = `${locationKiotDefault.geometry.lat},${locationKiotDefault.geometry.lng}`;
@@ -317,7 +317,7 @@ function Page2() {
             })
           );
 
-          listProduct = data.products || [];
+          listProduct = data?.products || [];
           let listKiotDis: any;
           if (distance) {
             listKiotDis = await axios.get(`kiots`, {
@@ -548,11 +548,11 @@ function Page2() {
 
               return {
                 ...item,
-                numberOfProduct: data.numberOfProduct,
-                numberOfOrder: data.numberOfOrder,
-                numberOfRating: data.numberOfRating,
-                avgRating: data.avgRating,
-                numberOfSold: data.numberOfSold,
+                numberOfProduct: data?.numberOfProduct,
+                numberOfOrder: data?.numberOfOrder,
+                numberOfRating: data?.numberOfRating,
+                avgRating: data?.avgRating,
+                numberOfSold: data?.numberOfSold,
               };
             })
           );
@@ -576,11 +576,11 @@ function Page2() {
 
               return {
                 ...item,
-                numberOfProduct: data.numberOfProduct,
-                numberOfOrder: data.numberOfOrder,
-                numberOfRating: data.numberOfRating,
-                avgRating: data.avgRating,
-                numberOfSold: data.numberOfSold,
+                numberOfProduct: data?.numberOfProduct,
+                numberOfOrder: data?.numberOfOrder,
+                numberOfRating: data?.numberOfRating,
+                avgRating: data?.avgRating,
+                numberOfSold: data?.numberOfSold,
               };
             })
           );

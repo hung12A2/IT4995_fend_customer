@@ -154,6 +154,7 @@ export default function LocationCard({}: {}) {
       value: `${updateLocation?.wardName}-${updateLocation?.wardCode}`,
       label: updateLocation?.wardName,
     });
+    setValueUpdate("name", updateLocation?.name);
     setValueUpdate("isDefaultKiot", updateLocation?.isDefaultKiot);
     setValueUpdate("isDefaultOnline", updateLocation?.isDefaultOnline);
   }, [selectedUpdate, location, formUpdateContext, setValueUpdate]);
@@ -172,6 +173,14 @@ export default function LocationCard({}: {}) {
                 </DialogHeader>
 
                 <FormProvider {...formContext}>
+                  <div className="mb-4">
+                    <TextField
+                      name="name"
+                      label="Name"
+                      placeholder="Name"
+                      required={true}
+                    />
+                  </div>
                   <div className="mb-4">
                     <TextField
                       name="address"
@@ -225,9 +234,9 @@ export default function LocationCard({}: {}) {
                   </div>
                   <Button
                     onClick={handleSubmit(async (data) => {
-                      let province = data.province.value;
-                      let district = data.district.value;
-                      let ward = data.ward.value;
+                      let province = data?.province.value;
+                      let district = data?.district.value;
+                      let ward = data?.ward.value;
                       const dataReturn: any = await axios.post(
                         `/location-users/create`,
                         {
@@ -266,6 +275,14 @@ export default function LocationCard({}: {}) {
                 </DialogHeader>
 
                 <FormProvider {...formUpdateContext}>
+                  <div className="mb-4">
+                    <TextField
+                      name="name"
+                      label="Name"
+                      placeholder="Name"
+                      required={true}
+                    />
+                  </div>
                   <div className="mb-4">
                     <TextField
                       name="address"
@@ -319,9 +336,9 @@ export default function LocationCard({}: {}) {
                   </div>
                   <Button
                     onClick={handleSubmitUpdate(async (data) => {
-                      let province = data.province.value;
-                      let district = data.district.value;
-                      let ward = data.ward.value;
+                      let province = data?.province.value;
+                      let district = data?.district.value;
+                      let ward = data?.ward.value;
                       const dataReturn: any = await axios.post(
                         `/location-users/update/${selectedUpdate}`,
                         {

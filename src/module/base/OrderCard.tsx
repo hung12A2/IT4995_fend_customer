@@ -290,7 +290,7 @@ export default function OrderCard({ order }: { order: any }) {
                   className="text-white bg-green-600 hover:bg-green-500"
                   onClick={handleSubmitReturn(async (data: any) => {
                     let dataForm = new FormData();
-                    dataForm.append("reason", data.reason);
+                    dataForm.append("reason", data?.reason);
                     if (data?.images) {
                       Array.from(data?.images).forEach((item: any) => {
                         dataForm.append("images", item);
@@ -441,7 +441,7 @@ export default function OrderCard({ order }: { order: any }) {
           })}
         <div className="mt-6 flex flex-col justify-end items-end">
           <div>
-            Thanh tien:{" "}
+            Thành tiền:{" "}
             <span className="text-lg text-green-600">{order?.priceOfAll}d</span>
           </div>
           <div className="mt-6 flex flex-row gap-x-4 justify-end">
@@ -463,6 +463,16 @@ export default function OrderCard({ order }: { order: any }) {
                 }}
               >
                Xem đánh giá
+              </div>
+            )}
+            {status == "returned" && (
+              <div
+                className="px-6 rounded-sm bg-green-600 py-2 border-[1px] text-white hover:cursor-grab"
+                onClick={() => {
+                  router.push(`/returnOrder/${order?.id}?type=online`);
+                }}
+              >
+                Thông tin hoàn hàng
               </div>
             )}
             {status == "delivered" && (
