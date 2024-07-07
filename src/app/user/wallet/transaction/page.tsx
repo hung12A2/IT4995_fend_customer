@@ -28,10 +28,12 @@ export default function Page() {
   const { user } = useAuthContext();
   const [selectedPage, setSelectedPage] = useState(1);
   const [listTransaction, setListTransaction] = useState<any>([]);
+  const [listReceiveTransaction, setListReceiveTransaction] = useState<any>([]);
+  const [listSendTransaction, setListSendTransaction] = useState<any>([]);
 
   useEffect(() => {
     async function fetchWallet() {
-      const data = await axios.get(`transactions`, {
+      const data: any = await axios.get(`transactions`, {
         params: {
           filter: {
             order: "createdAt DESC",
@@ -41,6 +43,20 @@ export default function Page() {
           },
         },
       });
+
+      let listTransactionSend: any = [];
+      let listTransactionReceive: any = [];
+
+      data?.map((item: any) => {
+        if (item?.type == "send") {
+          listTransactionSend.push(item);
+        } else {
+          listTransactionReceive.push(item);
+        }
+      });
+
+      setListReceiveTransaction(listTransactionReceive);
+      setListSendTransaction(listTransactionSend);
 
       setListTransaction(data);
     }
@@ -70,7 +86,7 @@ export default function Page() {
                   setSelectedPage(1);
                 }}
               >
-               Tất cả
+                Tất cả
               </div>
               <div
                 className={`w-1/3 flex justify-center items-center py-2 hover:cursor-grab ${
@@ -100,7 +116,31 @@ export default function Page() {
                 return <TransactionCard transaction={item} key={index} />;
               })}
 
-            {selectedPage == 1 && listTransaction?.lenght == 0 && (
+            {selectedPage == 1 && listTransaction?.length == 0 && (
+              <div className="text-center h-[60vh] flex items-center justify-center bg-white mt-4">
+                Khong co giao dich nao
+              </div>
+            )}
+
+            {selectedPage == 2 &&
+              listReceiveTransaction &&
+              listReceiveTransaction?.map((item: any, index: number) => {
+                return <TransactionCard transaction={item} key={index} />;
+              })}
+
+            {selectedPage == 2 && listReceiveTransaction?.length == 0 && (
+              <div className="text-center h-[60vh] flex items-center justify-center bg-white mt-4">
+                Khong co giao dich nao
+              </div>
+            )}
+
+            {selectedPage == 3 &&
+              listSendTransaction &&
+              listSendTransaction?.map((item: any, index: number) => {
+                return <TransactionCard transaction={item} key={index} />;
+              })}
+
+            {selectedPage == 3 && listSendTransaction?.length == 0 && (
               <div className="text-center h-[60vh] flex items-center justify-center bg-white mt-4">
                 Khong co giao dich nao
               </div>

@@ -11,6 +11,7 @@ import { set } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import ItemCard from "@/module/base/itemCard";
 import { useRouter } from "next/navigation";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function Page() {
   const {
@@ -19,6 +20,7 @@ export default function Page() {
     kiotItems,
     addItemsKiot,
     setKiotOrderItems,
+    removeItemsKiot
   } = useCartContext();
   const [listProduct, setListProduct] = useState<any>([]);
   const [quantityValues, setQuantityValues] = useState<any>({});
@@ -27,6 +29,7 @@ export default function Page() {
   const [recommendedProducts, setRecommendedProducts] = useState<any>([]);
   const [total, setTotal] = useState<any>(0);
   const router = useRouter();
+  const { toast } = useToast();
 
   async function apiAddOnline({ idOfProduct, quantity, isKiot }: any) {
     const data = await axios
@@ -226,22 +229,25 @@ export default function Page() {
                         <div className="col-span-2 flex flex-row items-center">
                           <button
                             onClick={() => {
-                              if (quantityValues[product.id] > 0)
+                              if (quantityValues[product.id] > 0) {
                                 setQuantityValues({
                                   ...quantityValues,
                                   [product.id]:
                                     (quantityValues[product.id] || 0) - 1,
                                 });
-                              addItemsKiot({
-                                ...product,
-                                quantity: (quantityValues[product.id] || 0) - 1,
-                                isKiot: true,
-                              });
-                              apiAddOnline({
-                                idOfProduct: product.id,
-                                quantity: (quantityValues[product.id] || 0) - 1,
-                                isKiot: true,
-                              });
+                                addItemsKiot({
+                                  ...product,
+                                  quantity:
+                                    (quantityValues[product.id] || 0) - 1,
+                                  isKiot: true,
+                                });
+                                apiAddOnline({
+                                  idOfProduct: product.id,
+                                  quantity:
+                                    (quantityValues[product.id] || 0) - 1,
+                                  isKiot: true,
+                                });
+                              }
                             }}
                           >
                             -
@@ -273,21 +279,28 @@ export default function Page() {
                           />
                           <button
                             onClick={() => {
-                              addItemsKiot({
-                                ...product,
-                                quantity: (quantityValues[product.id] || 0) + 1,
-                                isKiot: true,
-                              });
-                              setQuantityValues({
-                                ...quantityValues,
-                                [product.id]:
-                                  (quantityValues[product.id] || 0) + 1,
-                              });
-                              apiAddOnline({
-                                idOfProduct: product.id,
-                                quantity: (quantityValues[product.id] || 0) + 1,
-                                isKiot: true,
-                              });
+                              if (
+                                quantityValues[product.id] <
+                                product?.countInStock
+                              ) {
+                                addItemsKiot({
+                                  ...product,
+                                  quantity:
+                                    (quantityValues[product.id] || 0) + 1,
+                                  isKiot: true,
+                                });
+                                setQuantityValues({
+                                  ...quantityValues,
+                                  [product.id]:
+                                    (quantityValues[product.id] || 0) + 1,
+                                });
+                                apiAddOnline({
+                                  idOfProduct: product.id,
+                                  quantity:
+                                    (quantityValues[product.id] || 0) + 1,
+                                  isKiot: true,
+                                });
+                              }
                             }}
                           >
                             +
@@ -298,7 +311,14 @@ export default function Page() {
                           <span className="text-sm font-light">đ</span>
                         </div>
                         <div className="col-span-1 flex items-center">
-                          <button className="bg-red-500 text-white px-4 py-2 rounded">
+                          <button className="bg-red-500 text-white px-4 py-2 rounded" onClick={ async() => {
+                            removeItemsKiot(product.id);
+                            apiAddOnline({
+                              idOfProduct: product.id,
+                              quantity: 0,
+                              isKiot: true
+                            })
+                          }}>
                             Xoa
                           </button>
                         </div>
@@ -342,6 +362,13 @@ export default function Page() {
                   const selectedProducts = Object.entries(productCheckboxes)
                     .filter(([productId, isChecked]) => isChecked)
                     .map(([productId]) => productId);
+
+                  if (selectedProducts.length == 0) {
+                    toast({
+                      title: "Chưa chọn sản phẩm",
+                    });
+                    return;
+                  }
 
                   const selectedData = listProduct
                     .map((kiot: any) => {

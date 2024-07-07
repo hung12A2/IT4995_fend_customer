@@ -4,7 +4,7 @@ import Footer from "@/module/Footer";
 import Header from "@/module/Header";
 import { useParams } from "next/navigation";
 import axios from "../../../module/AxiosCustom/custome_Axios";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import Link from "next/link";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
@@ -36,6 +36,7 @@ import parse from "html-react-parser";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Chat from "@/module/chat/chat";
 import { useAuthContext } from "@/provider/auth.provider";
+import KiotCard2 from "@/module/base/KiotCard2";
 
 function formatDate(isoString: string) {
   const date = new Date(isoString);
@@ -97,6 +98,7 @@ const Star = ({ rating }: { rating: number }) => {
 export default function ProductPage() {
   const [product, setProduct] = useState<any>({});
   const [shop, setShop] = useState<any>();
+  const [kiot, setKiot] = useState<any>();
   const [mainImg, setMainImg] = useState<any>({});
   const { user, isAuthenticated } = useAuthContext();
   const [location, setLocation] = useState<any>();
@@ -104,6 +106,7 @@ export default function ProductPage() {
   const [quantity, setQuantity] = useState<number>(1);
   const { toast } = useToast();
   const [shopInfo, setShopInfo] = useState<any>({});
+  const [kiotInfo, setKiotInfo] = useState<any>({});
   const { addItemsOnline, addItemsKiot } = useCartContext();
   const [listRating, setListRating] = useState<any>([]);
 
@@ -115,6 +118,34 @@ export default function ProductPage() {
         .get(`products/${idOfProduct}`)
         .then((res) => res)
         .catch((e) => console.log(e));
+
+      if (productReturn?.isKiotProduct) {
+        let kiotReturn: any = await axios
+          .get(`kiots`, {
+            params: {
+              filter: {
+                where: {
+                  id: productReturn?.idOfKiot,
+                },
+              },
+            },
+          })
+          .then((res) => res)
+          .catch((e) => console.log(e));
+
+        let kiotInfoReturn: any = await axios.get(`kiot-infos`, {
+          params: {
+            filter: {
+              where: {
+                idOfKiot: productReturn?.idOfKiot,
+              },
+            },
+          },
+        });
+
+        setKiot(kiotReturn[0]);
+        setKiotInfo(kiotInfoReturn[0]);
+      }
 
       let shopReturn: any = await axios
         .get(`stores`, {
@@ -178,7 +209,6 @@ export default function ProductPage() {
         return location.isDefaultKiot;
       })[0];
       setSelectedLocation(locationDefautl);
-
     }
 
     fetchData();
@@ -406,6 +436,9 @@ export default function ProductPage() {
         <div className="w-2/3">
           <ShopCard2 shop={shop} shopInfo={shopInfo} />
         </div>
+        <div className="w-2/3">
+          <KiotCard2 shop={kiot} shopInfo={kiotInfo} />
+        </div>
 
         <div className="w-2/3 mt-6 bg-white p-8 flex flex-col ">
           <div className="text-lg">CHI TIẾT SẢN PHẨM</div>
@@ -442,7 +475,7 @@ export default function ProductPage() {
             </div>
             <div className="flex flex-row items-center gap-x-4 ml-16">
               <div className="px-3 py-1 text-green-600 border-green-600 border-[1px] hover:cursor-grab">
-               Tất cả
+                Tất cả
               </div>
               <div className="px-3 py-1 border-[1px] border-gray-500 hover:cursor-grab">
                 5 sao

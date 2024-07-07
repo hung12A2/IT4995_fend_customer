@@ -887,7 +887,7 @@ function Page2() {
                         `{keyWord}`
                       </p>
                     </p>
-                    <ShopCard shop={listShop[1]} />
+                    <ShopCard shop={listShop[0]} />
                   </>
                 )}
 

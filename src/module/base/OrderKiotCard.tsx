@@ -24,6 +24,7 @@ import { toast } from "@/components/ui/use-toast";
 import StarBorderPurple500Icon from "@mui/icons-material/StarBorderPurple500";
 import { useAuthContext } from "@/provider/auth.provider";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useCartContext } from "@/provider/cart.provider";
 
 const Star = ({ rating }: { rating: number }) => {
   return (
@@ -65,6 +66,29 @@ export default function OrderKiotCard({ order }: { order: any }) {
   const [openViewRating, setOpenViewRating] = useState(false);
   const [openReturn, setOpenReturn] = useState(false);
   const [listRating, setListRating] = useState([]);
+
+  const {
+    onlineItems,
+    setOnlineOrderItems,
+    kiotItems,
+    addItemsKiot,
+    setKiotOrderItems,
+    addItemsOnline,
+    removeItemsOnline,
+    removeItemsKiot,
+  } = useCartContext();
+
+  async function apiAddOnline({ idOfProduct, quantity, isKiot }: any) {
+    const data = await axios
+      .post(`product-in-carts/create/${idOfProduct}`, {
+        quantity,
+        isKiot,
+      })
+      .then((res) => res)
+      .catch((e) => console.log(e));
+
+    return data;
+  }
 
   useEffect(() => {
     async function fetchData() {
@@ -519,7 +543,28 @@ export default function OrderKiotCard({ order }: { order: any }) {
             {(status == "rating" ||
               status == "canceled" ||
               status == "rejected") && (
-              <div className="px-4 py-2 border-[1px] border-gray-300 hover:bg-green-500 text-white bg-green-600 hover:cursor-grab">
+              <div
+                className="px-4 py-2 border-[1px] border-gray-300 hover:bg-green-500 text-white bg-green-600 hover:cursor-grab"
+                onClick={() => {
+                  items?.map((item: any) => {
+                    const product = item?.product;
+                    addItemsKiot({
+                      ...product,
+                      quantity: item?.quantity,
+                      isKiot: true,
+                    });
+
+                    apiAddOnline({
+                      idOfProduct: product?.id,
+                      quantity: item?.quantity,
+                      isKiot: true,
+                    });
+
+                  });
+                  router.push("/cartOnline");
+
+                }}
+              >
                 Mua lại
               </div>
             )}

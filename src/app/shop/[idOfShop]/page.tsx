@@ -159,7 +159,7 @@ function Page2() {
               <div className="absolute flex flex-col gap-y-2 left-4 top-2">
                 <div className="flex flex-row gap-x-3">
                   <img
-                    src={Shop?.avatar?.url}
+                    src={Shop?.avatar?.url || 'https://github.com/shadcn.png'}
                     className="w-[72px] h-[72px] rounded-full"
                     alt=""
                   />
@@ -197,7 +197,7 @@ function Page2() {
                 </div>
               </div>
               <img
-                src={Shop?.coverImage?.url}
+                src={Shop?.coverImage?.url || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQtqB4g6GQ5QPHLlf1dduVTt7xy3gEnM_fB4NA1IZ2YQ&s'}
                 className="w-[390px] h-[135px]"
                 alt="no alt"
               />

@@ -46,7 +46,7 @@ export default function Footer() {
 				<h3 className="uppercase dark:text-coolGray-50 font-semibold text-lg">Follow Me</h3>
 				<ul className="space-y-1">
 					<li>
-						<a rel="noopener noreferrer" href="https://www.facebook.com/profile.php?id=100094515112036" className='font-medidum hover:text-green-500'>Nguyễn Việt Hưng</a>
+						<a rel="noopener noreferrer" href="https://www.linkedin.com/in/h%C6%B0ng-nguy%E1%BB%85n-0b6ab1289/" className='font-medidum hover:text-green-500'>Nguyễn Việt Hưng</a>
 					</li>
 					
 				</ul>

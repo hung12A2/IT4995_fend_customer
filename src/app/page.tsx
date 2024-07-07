@@ -58,7 +58,9 @@ export default function Home() {
           .get(`location-users`, {
             params: {
               filter: {
-                isDefaultKiot: true,
+                where: {
+                  isDefaultKiot: true,
+                },
               },
             },
           })

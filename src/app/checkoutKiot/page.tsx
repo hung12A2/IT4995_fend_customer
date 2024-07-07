@@ -2,7 +2,7 @@
 "use client";
 import Header from "@/module/Header";
 import { useCartContext } from "@/provider/cart.provider";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import axios from "../../module/AxiosCustom/custome_Axios";
 import LocationCardCheckOut from "@/module/base/locationCardCheckout";
@@ -18,7 +18,7 @@ export default function Page() {
     <Suspense>
       <Page2 />
     </Suspense>
-  )
+  );
 }
 
 function Page2() {
@@ -31,6 +31,13 @@ function Page2() {
   const [preview, setPreview] = useState<any>();
   const [previewDistance, setPreviewDistance] = useState<any>([]);
   const { user } = useAuthContext();
+
+  const router = useRouter();
+
+  function delay(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
 
   const searchParams = useSearchParams();
   let state: any = searchParams.get("state");
@@ -60,8 +67,8 @@ function Page2() {
       let totalMoney = 0;
       let totalCount = 0;
       let totalShipping = 0;
+      let prevDis = {};
       if (state && selectedLocation) {
-        console.log(state);
         let lct = selectedLocation;
         await Promise.all(
           state?.map(async (item: any) => {
@@ -76,10 +83,13 @@ function Page2() {
               };
             });
 
-            let fromDistrict = `${kiotData?.pickUpDistrictName}-${kiotData?.pickUpDistrictId}`;
-            let fromWard = `${kiotData?.pickUpWardName}-${kiotData?.pickUpWardId}`;
-            let toWard = `${lct?.wardName}-${lct?.wardId}`;
-            let toDistrict = `${lct?.districtName}-${lct?.districtId}`;
+            let fromDistrict = `${kiotData?.pickUpDistrictName}`;
+            let fromWard = `${kiotData?.pickUpWardName}`;
+            let toWard = `${lct?.wardName}`;
+            let toDistrict = `${lct?.districtName}`;
+            let fromProvince = `${kiotData?.pickUpProvinceName}`;
+            let toProvince = `${lct?.provinceName}`;
+
             let data: any = await axios
               .post(`order-kiot/preview`, {
                 fromAddress: kiotData?.pickUpAddress,
@@ -88,6 +98,8 @@ function Page2() {
                 fromWard,
                 toDistrict,
                 toWard,
+                fromProvince,
+                toProvince,
                 items: listProducts,
               })
               .then((res) => res.data)
@@ -95,26 +107,29 @@ function Page2() {
 
             obj[kiotData?.id] = data?.totalFee;
 
-            console.log(data);
-
             totalMoney += data?.totalFee;
             totalShipping += data?.totalFee;
 
             setPreview({ ...obj, [kiotData?.id]: data?.totalFee });
-            setPreviewDistance({
-              ...previewDistance,
+
+            prevDis = {
+              ...prevDis,
               [kiotData?.id]: {
                 distance: data?.distance,
                 estimateTime: data?.estimateTime,
               },
-            });
+            };
+
             setTotal({
               totalMoney,
               totalCount,
               totalShipping,
             });
+
+            await delay(500)
           })
         );
+        setPreviewDistance(prevDis);
       }
     }
 
@@ -304,7 +319,9 @@ function Page2() {
                   state?.forEach(async (item: any) => {
                     const kiot = item?.kiot;
                     const products = item?.items;
+                    let totalMoney = 0;
                     const listIdProduct = products.map((product: any) => {
+                      totalMoney += product.price * product.quantity;
                       return {
                         idOfProduct: product.id,
                         quantity: product.quantity,
@@ -318,7 +335,8 @@ function Page2() {
                           fromName: kiot?.name,
                           fromPhone: kiot?.phoneNumber,
                           toName: selectedLocation?.name || user?.fullName,
-                          toPhone: selectedLocation?.phoneNumber || user?.phoneNumber,
+                          toPhone:
+                            selectedLocation?.phoneNumber || user?.phoneNumber,
                           fromAddress: kiot?.pickUpAddress,
                           toAddress: selectedLocation?.address,
                           fromDistrict: `${kiot?.pickUpDistrictName}`,
@@ -327,7 +345,7 @@ function Page2() {
                           toWard: `${selectedLocation?.wardName}`,
                           fromProvince: `${kiot?.pickUpProvinceName}`,
                           toProvince: `${selectedLocation?.provinceName}`,
-                          priceOfAll: +total?.totalMoney,
+                          priceOfAll: totalMoney + preview?.[kiot?.id],
                           paymentMethod: paymentMethod,
                           note: listNote?.[kiot?.id] || "no note",
                           requiredNote: "CHOTHUHANG",
@@ -342,9 +360,11 @@ function Page2() {
                       toast({
                         title: "Dat hang thanh cong",
                       });
+
+                      router.push("/");
                     } else {
                       toast({
-                        title: "Dat hang that bai",
+                        title: "Khong du tien trong vi",
                       });
                     }
                   });

@@ -44,7 +44,7 @@ const reducer = (state: any, action: any) => {
     }
     case "removeItemsOnline": {
       const removeItem = state.onlineItems.filter(
-        (item: any) => item.idOfProduct !== action.payload
+        (item: any) => item.id !== action.payload
       );
       return {
         ...state,
@@ -82,9 +82,11 @@ const reducer = (state: any, action: any) => {
     }
 
     case "removeItemsKiot": {
+      console.log(action.payload);
       const removeItem = state.kiotItems.filter(
-        (item: any) => item.idOfProduct !== action.payload
+        (item: any) => item.id != action.payload
       );
+
       return {
         ...state,
         kiotItems: removeItem,

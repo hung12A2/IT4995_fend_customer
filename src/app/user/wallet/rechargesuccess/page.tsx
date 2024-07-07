@@ -14,6 +14,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import axios from "../../../../module/AxiosCustom/custome_Axios";
 import NavUser from "@/module/base/navUser";
+import { set } from "date-fns";
 
 function formatDate(dateStr: string) {
   const formattedDate = `${dateStr.slice(8, 10)}:${dateStr.slice(
@@ -35,6 +36,7 @@ export default function Page() {
 function Page2() {
   const { user } = useAuthContext();
   const searchParams = useSearchParams();
+  const [check, setCheck] = useState(true);
 
   let vnPayAmount: any = searchParams.get("vnp_Amount");
   vnPayAmount = vnPayAmount ? +vnPayAmount / 100 : 0;
@@ -62,20 +64,20 @@ function Page2() {
           },
         });
 
-        if (dataTransaction?.length == 0) {
+        if (dataTransaction?.length == 0 && check ) {
           await axios.post(`wallet-of-user/update`, {
             type: "charge",
-            amountMoney: vnPayAmount,
-            vnpayCode: `${vnPayBankTranNo}-${
-              window?.location.href.split("?")[1]
-            }`,
+            amountMoney: vnPayAmount/2,
+            vnpayCode: `${vnPayBankTranNo}`,
           });
+
+          setCheck(false);
         }
       }
     }
 
     fetchWallet();
-  }, [vnPayAmount, vnPayBankTranNo, user?.id]);
+  }, []);
 
   const router = useRouter();
 

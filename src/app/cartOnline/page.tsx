@@ -11,9 +11,15 @@ import { set } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import ItemCard from "@/module/base/itemCard";
 import { useRouter } from "next/navigation";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function Page() {
-  const { onlineItems, addItemsOnline, setOnlineOrderItems } = useCartContext();
+  const {
+    onlineItems,
+    addItemsOnline,
+    setOnlineOrderItems,
+    removeItemsOnline,
+  } = useCartContext();
   const [listProduct, setListProduct] = useState<any>([]);
   const [quantityValues, setQuantityValues] = useState<any>({});
   const [storeCheckboxes, setStoreCheckboxes] = useState<any>({});
@@ -21,6 +27,7 @@ export default function Page() {
   const [recommendedProducts, setRecommendedProducts] = useState<any>([]);
   const [total, setTotal] = useState<any>(0);
   const router = useRouter();
+  const { toast } = useToast();
 
   async function apiAddOnline({ idOfProduct, quantity, isKiot }: any) {
     const data = await axios
@@ -106,7 +113,7 @@ export default function Page() {
     fetchData();
   }, [onlineItems]);
   return (
-    <div className="bg-gray-100">
+    <div className="bg-gray-100 flex flex-col justify-center items-center">
       <Header />
 
       <div className="flex flex-col justify-center items-center  mt-[104px]">
@@ -121,7 +128,7 @@ export default function Page() {
           <div className="col-span-1">Thao tác</div>
         </div>
 
-        <div className="mb-8 w-full flex justify-center">
+        <div className="mb-8 w-full flex flex-col items-center justify-center">
           {listProduct &&
             listProduct.map((item: any) => {
               const store = item.store;
@@ -222,22 +229,25 @@ export default function Page() {
                         <div className="col-span-2 flex flex-row items-center">
                           <button
                             onClick={() => {
-                              if (quantityValues[product.id] > 0)
+                              if (quantityValues[product.id] > 0) {
                                 setQuantityValues({
                                   ...quantityValues,
                                   [product.id]:
                                     (quantityValues[product.id] || 0) - 1,
                                 });
-                              addItemsOnline({
-                                ...product,
-                                quantity: (quantityValues[product.id] || 0) - 1,
-                                isKiot: false,
-                              });
-                              apiAddOnline({
-                                idOfProduct: product.id,
-                                quantity: (quantityValues[product.id] || 0) - 1,
-                                isKiot: false,
-                              });
+                                addItemsOnline({
+                                  ...product,
+                                  quantity:
+                                    (quantityValues[product.id] || 0) - 1,
+                                  isKiot: false,
+                                });
+                                apiAddOnline({
+                                  idOfProduct: product.id,
+                                  quantity:
+                                    (quantityValues[product.id] || 0) - 1,
+                                  isKiot: false,
+                                });
+                              }
                             }}
                           >
                             -
@@ -269,21 +279,28 @@ export default function Page() {
                           />
                           <button
                             onClick={() => {
-                              addItemsOnline({
-                                ...product,
-                                quantity: (quantityValues[product.id] || 0) + 1,
-                                isKiot: false,
-                              });
-                              setQuantityValues({
-                                ...quantityValues,
-                                [product.id]:
-                                  (quantityValues[product.id] || 0) + 1,
-                              });
-                              apiAddOnline({
-                                idOfProduct: product.id,
-                                quantity: (quantityValues[product.id] || 0) + 1,
-                                isKiot: false,
-                              });
+                              if (
+                                quantityValues[product.id] <
+                                product?.countInStock
+                              ) {
+                                addItemsOnline({
+                                  ...product,
+                                  quantity:
+                                    (quantityValues[product.id] || 0) + 1,
+                                  isKiot: false,
+                                });
+                                setQuantityValues({
+                                  ...quantityValues,
+                                  [product.id]:
+                                    (quantityValues[product.id] || 0) + 1,
+                                });
+                                apiAddOnline({
+                                  idOfProduct: product.id,
+                                  quantity:
+                                    (quantityValues[product.id] || 0) + 1,
+                                  isKiot: false,
+                                });
+                              }
                             }}
                           >
                             +
@@ -294,7 +311,17 @@ export default function Page() {
                           <span className="text-sm font-light">đ</span>
                         </div>
                         <div className="col-span-1 flex items-center">
-                          <button className="bg-red-500 text-white px-4 py-2 rounded">
+                          <button
+                            className="bg-red-500 text-white px-4 py-2 rounded"
+                            onClick={() => {
+                              removeItemsOnline(product.id);
+                              apiAddOnline({
+                                idOfProduct: product.id,
+                                quantity: 0,
+                                isKiot: false,
+                              });
+                            }}
+                          >
                             Xoa
                           </button>
                         </div>
@@ -308,7 +335,7 @@ export default function Page() {
         <div className="border-gray-200 w-2/3 bg-white mb- px-4 py-4">
           <div className="flex flex-col justify-center items-center bg-white">
             <h1 className="text-xl mt-2 text-green-700 mt-4">
-             Top sản phẩm bán chạy
+              Top sản phẩm bán chạy
             </h1>
             <div className="border-2 border-green-300 w-full"></div>
           </div>
@@ -339,6 +366,13 @@ export default function Page() {
                     .filter(([productId, isChecked]) => isChecked)
                     .map(([productId]) => productId);
 
+                  if (selectedProducts.length == 0) {
+                    toast({
+                      title: "Chưa chọn sản phẩm",
+                    });
+                    return;
+                  }
+
                   const selectedData = listProduct
                     .map((shop: any) => {
                       const selectedItems = shop.items.filter((item: any) =>
@@ -352,9 +386,11 @@ export default function Page() {
                     })
                     .filter((shop: any) => shop.items.length > 0);
 
-                    console.log(JSON.stringify(selectedData));
+                  console.log(JSON.stringify(selectedData));
 
-                  const state = encodeURIComponent(JSON.stringify(selectedData));
+                  const state = encodeURIComponent(
+                    JSON.stringify(selectedData)
+                  );
                   router.push(`/checkoutOnline/?state=${state}`);
                 }}
                 className="px-16 py-2  bg-green-700 text-md text-white"

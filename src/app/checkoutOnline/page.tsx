@@ -2,7 +2,7 @@
 "use client";
 import Header from "@/module/Header";
 import { useCartContext } from "@/provider/cart.provider";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import axios from "../../module/AxiosCustom/custome_Axios";
 import LocationCardCheckOut from "@/module/base/locationCardCheckout";
@@ -31,9 +31,15 @@ function Page2() {
   const [preview, setPreview] = useState<any>();
   const { user } = useAuthContext();
 
+  const router = useRouter();
+
   const searchParams = useSearchParams();
   let state: any = searchParams.get("state");
   state = state ? JSON.parse(state) : null;
+
+  function delay(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
 
   useEffect(() => {
     async function fetchData() {
@@ -89,17 +95,21 @@ function Page2() {
               .then((res) => res.data)
               .catch((e) => console.log(e));
 
-            obj[shopData.id] = data?.total;
+            obj[shopData.id] = Math.round(data?.total / 10);
 
-            totalMoney += data?.total;
-            totalShipping += data?.total;
-            setPreview({ ...obj, [shopData.id]: data?.total });
+            totalMoney += Math.round(data?.total / 10);
+            totalShipping += Math.round(data?.total / 10);
+            setPreview({ ...obj, [shopData.id]: Math.round(data?.total / 10) });
             setTotal({
               totalMoney,
               totalCount,
               totalShipping,
             });
+
+            await delay(500)
           })
+
+
         );
       }
     }
@@ -281,7 +291,9 @@ function Page2() {
                   state?.forEach(async (item: any) => {
                     const shop = item?.shop;
                     const products = item?.items;
+                    let totalMoney = 0;
                     const listIdProduct = products.map((product: any) => {
+                      totalMoney += product.price * product.quantity;
                       return {
                         idOfProduct: product.id,
                         quantity: product.quantity,
@@ -303,8 +315,8 @@ function Page2() {
                         toWard: `${selectedLocation?.wardName}-${selectedLocation?.wardId}`,
                         fromProvince: `${shop.pickUpProvinceName}-${shop.pickUpProvinceId}`,
                         toProvince: `${selectedLocation?.provinceName}-${selectedLocation?.provinceId}`,
-                        priceOfAll: total?.totalMoney,
-                        totalFee: total?.totalShipping,
+                        priceOfAll: totalMoney + preview?.[shop.id],
+                        totalFee: preview?.[shop.id],
                         paymentMethod: paymentMethod,
                         note: listNote?.[shop.id] || "no note",
                         requiredNote: "CHOTHUHANG",
@@ -317,6 +329,7 @@ function Page2() {
                       toast({
                         title: "Dat hang thanh cong",
                       });
+                      router.push("/");
                     } else {
                       toast({
                         title: "Dat hang that bai",

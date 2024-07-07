@@ -68,7 +68,7 @@ const Login = () => {
       router.push("/Login");
     } else {
       toast({
-        title: "Đăng ký thất bại",
+        title: "Đăng ký thất bại, tai khoan da ton tai",
         variant: "destructive",
       });
     }

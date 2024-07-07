@@ -25,6 +25,7 @@ import StoreIcon from "@mui/icons-material/Store";
 import ChatIcon from "@mui/icons-material/Chat";
 import Chat from "@/module/chat/chat";
 import NavUser from "@/module/base/navUser";
+import { useCartContext } from "@/provider/cart.provider";
 
 function formatDate(date: string) {
   const dateObj = new Date(date);
@@ -104,6 +105,29 @@ export default function Page() {
   const router = useRouter();
   const [orderData, setOrderData] = useState<any>({});
   const orderId = useParams().orderId;
+
+  const {
+    onlineItems,
+    setOnlineOrderItems,
+    kiotItems,
+    addItemsKiot,
+    setKiotOrderItems,
+    addItemsOnline,
+    removeItemsOnline,
+    removeItemsKiot,
+  } = useCartContext();
+
+  async function apiAddOnline({ idOfProduct, quantity, isKiot }: any) {
+    const data = await axios
+      .post(`product-in-carts/create/${idOfProduct}`, {
+        quantity,
+        isKiot,
+      })
+      .then((res) => res)
+      .catch((e) => console.log(e));
+
+    return data;
+  }
 
   useEffect(() => {
     async function fetchData() {
@@ -301,7 +325,26 @@ export default function Page() {
             {/* Đánh giá */}
             <div className="flex flex-col px-6 bg-green-50 border-b-2 border-green-500">
               <div className="flex justify-end py-4 border-b-[1px] border-gray-200">
-                <div className="w-[200px] flex hover:cursor-grab justify-center items-center bg-green-600 text-white py-2">
+                <div
+                  className="w-[200px] flex hover:cursor-grab justify-center items-center bg-green-600 text-white py-2"
+                  onClick={() => {
+                    const items = orderData?.items;
+                    items?.map((item: any) => {
+                      apiAddOnline({
+                        idOfProduct: item.id,
+                        quantity: item.quantity,
+                        isKiot: false,
+                      });
+                      addItemsOnline({
+                        ...item,
+                        quantity: item.quantity,
+                        isKiot: false,
+                      });
+                    });
+
+                    router.push("/cartOnline");
+                  }}
+                >
                   Mua Lại
                 </div>
               </div>
@@ -432,7 +475,7 @@ export default function Page() {
                         {orderData?.priceOfAll - orderData?.totalFee}d
                       </div>
                       <div className="flex items-center pr-6 text-sm">
-                       Tổng tiền hàng
+                        Tổng tiền hàng
                       </div>
                     </div>
                     <div className="flex flex-row-reverse border-t-[1px] border-gray-300 w-full">
@@ -440,7 +483,7 @@ export default function Page() {
                         {orderData?.totalFee}d
                       </div>
                       <div className="flex items-center pr-6 text-sm">
-                       Phí vận chuyển
+                        Phí vận chuyển
                       </div>
                     </div>
                     <div className="flex flex-row-reverse border-y-[1px] border-gray-300 w-full">

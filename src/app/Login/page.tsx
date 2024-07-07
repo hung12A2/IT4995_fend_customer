@@ -31,6 +31,11 @@ const Login = () => {
         .catch((e) => console.log(e));
       login(dataUser);
       router.push("/");
+    } else {
+      toast({
+        title: 'invalid email or password',
+        variant:'destructive'
+      })
     }
   };
 
@@ -70,9 +75,19 @@ const Login = () => {
             <a
               className="no-underline border-b border-grey-dark text-md text-grey-dark text-green-700 font-semibold"
               href="#"
-              onClick={() => {}}
+              onClick={() => { router.push ('/')}}
             >
               Back To Home
+            </a>
+          </div>
+
+          <div className="text-center text-sm text-grey-dark mt-4">
+            <a
+              className="no-underline border-b border-grey-dark text-md text-grey-dark text-green-700 font-semibold"
+              href="#"
+              onClick={() => { router.push ('/Register')}}
+            >
+              Register
             </a>
           </div>
 

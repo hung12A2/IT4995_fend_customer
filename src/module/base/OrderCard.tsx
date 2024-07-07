@@ -24,6 +24,7 @@ import { toast } from "@/components/ui/use-toast";
 import StarBorderPurple500Icon from "@mui/icons-material/StarBorderPurple500";
 import { useAuthContext } from "@/provider/auth.provider";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useCartContext } from "@/provider/cart.provider";
 
 const Star = ({ rating }: { rating: number }) => {
   return (
@@ -51,6 +52,29 @@ function formatDate(isoString: string) {
 }
 
 export default function OrderCard({ order }: { order: any }) {
+  const {
+    onlineItems,
+    setOnlineOrderItems,
+    kiotItems,
+    addItemsKiot,
+    setKiotOrderItems,
+    addItemsOnline,
+    removeItemsOnline,
+    removeItemsKiot,
+  } = useCartContext();
+
+  async function apiAddOnline({ idOfProduct, quantity, isKiot }: any) {
+    const data = await axios
+      .post(`product-in-carts/create/${idOfProduct}`, {
+        quantity,
+        isKiot,
+      })
+      .then((res) => res)
+      .catch((e) => console.log(e));
+
+    return data;
+  }
+
   const shop = order?.shop;
   const items = order?.items;
   const status = order?.status;
@@ -238,7 +262,7 @@ export default function OrderCard({ order }: { order: any }) {
                         <div>{product?.name}</div>
                         <div>x{item?.quantity}</div>
                         <div className="text-sm text-green-600 border-green-600 border-[1px] px-1">
-                        Trả hàng miễn phí 15 ngày
+                          Trả hàng miễn phí 15 ngày
                         </div>
                       </div>
                     </div>
@@ -298,9 +322,9 @@ export default function OrderCard({ order }: { order: any }) {
                     }
                     const dataFetch: any = await axios
                       .post(`orders/returned/order/${order?.id}`, dataForm, {
-                        headers:{
-                          'Content-Type': 'multipart/form-data'
-                        }
+                        headers: {
+                          "Content-Type": "multipart/form-data",
+                        },
                       })
                       .then((res) => res)
                       .catch((e) => console.log(e));
@@ -376,10 +400,12 @@ export default function OrderCard({ order }: { order: any }) {
           <div className="px-2 hover:cursor-grab hover:bg-green-500 bg-green-600 text-white text-sm">
             <ChatIcon fontSize="small" /> Chat
           </div>
-          <div className="px-2 hover:cursor-grab hover:bg-green-100 border-gray-300 border-[1px] text-sm" 
+          <div
+            className="px-2 hover:cursor-grab hover:bg-green-100 border-gray-300 border-[1px] text-sm"
             onClick={() => {
               router.push(`/shop/${shop?.id}`);
-            }}>
+            }}
+          >
             <StoreIcon fontSize="small" /> Xem shop
           </div>
         </div>
@@ -431,7 +457,7 @@ export default function OrderCard({ order }: { order: any }) {
                     <div>{product?.name}</div>
                     <div>x{item?.quantity}</div>
                     <div className="text-sm text-green-600 border-green-600 border-[1px] px-1">
-                    Trả hàng miễn phí 15 ngày
+                      Trả hàng miễn phí 15 ngày
                     </div>
                   </div>
                 </div>
@@ -462,7 +488,7 @@ export default function OrderCard({ order }: { order: any }) {
                   setOpenViewRating(true);
                 }}
               >
-               Xem đánh giá
+                Xem đánh giá
               </div>
             )}
             {status == "returned" && (
@@ -505,15 +531,37 @@ export default function OrderCard({ order }: { order: any }) {
                   setOpenReturn(true);
                 }}
               >
-               Trả hàng/ hoàn tiền
+                Trả hàng/ hoàn tiền
               </div>
             )}
 
             {(status == "rating" ||
               status == "canceled" ||
               status == "rejected") && (
-              <div className="px-4 py-2 border-[1px] border-gray-300 hover:bg-green-500 text-white bg-green-600 hover:cursor-grab">
-               Mua lại
+              <div
+                className="px-4 py-2 border-[1px] border-gray-300 hover:bg-green-500 text-white bg-green-600 hover:cursor-grab"
+                onClick={() => {
+                  items?.map((item: any) => { 
+                    const product = item?.product;
+                    addItemsOnline({
+                      ...product,
+                      quantity: item?.quantity,
+                      isKiot: false,
+                    });
+
+                    apiAddOnline ({
+                      idOfProduct: product?.id, 
+                      quantity: item?.quantity,
+                      isKiot: false
+                    })
+
+                  })
+
+                  router.push("/cartOnline");
+
+                }}
+              >
+                Mua lại
               </div>
             )}
 

@@ -166,7 +166,7 @@ function Header2() {
               <div
                 className="hover:cursor-grab hover:text-gray-200 text-sm pl-2"
                 onClick={() => {
-                  router.push(`https://www.facebook.com/hung131119782002`);
+                  router.push(`https://www.linkedin.com/in/h%C6%B0ng-nguy%E1%BB%85n-0b6ab1289/`);
                 }}
               >
                 Ket noi
